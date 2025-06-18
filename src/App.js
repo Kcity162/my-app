@@ -231,8 +231,14 @@ export default function UserSearch() {
                   setSelectedUser(null);
                   setSnackOpen(true);
                 }}
+                onKeyDown={(e) => {
+                  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                    setSelectedUser(null);
+                    setSnackOpen(true);
+                  }
+                }}
               >
-                Print
+                <span>Print <Typography variant="caption" sx={{ ml: 1 }}>(⌘ + ⏎)</Typography></span>
               </Button>
             </CardActions>
           </Card>
