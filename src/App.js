@@ -3,6 +3,7 @@ import { Autocomplete, TextField, Avatar, ListItem, ListItemAvatar, ListItemText
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
+import Tooltip from '@mui/material/Tooltip';
 
 const users = [
   { name: 'Alice Johnson', code: '123456', avatar: 'https://i.pravatar.cc/40?u=alice', company: 'DreamCorp', phone: '555-1234', email: 'alice@example.com', notes: 'Likes to arrive early', host: 'Samantha Ray' },
@@ -59,9 +60,11 @@ export default function UserSearch() {
               secondary={
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span>{`Pin: ${option.code.slice(0, 3)} ${option.code.slice(3)}`}</span>
-                  <Avatar sx={{ width: 24, height: 24, fontSize: 12 }}>
-                    {option.host.split(' ').map(n => n[0]).join('')}
-                  </Avatar>
+                  <Tooltip title={option.host}>
+                    <Avatar sx={{ width: 24, height: 24, fontSize: 12 }}>
+                      {option.host.split(' ').map(n => n[0]).join('')}
+                    </Avatar>
+                  </Tooltip>
                 </Box>
               }
             />
