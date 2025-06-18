@@ -6,9 +6,9 @@ import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
 
 const users = [
-  { name: 'Alice Johnson', code: '123456', avatar: 'https://i.pravatar.cc/40?u=alice', company: 'DreamCorp', phone: '555-1234', email: 'alice@example.com', notes: 'Likes to arrive early', host: 'Samantha Ray' },
-  { name: 'Bob Smith', code: '654321', avatar: 'https://i.pravatar.cc/40?u=bob', company: 'Innovatech', phone: '555-5678', email: 'bob@example.com', notes: 'Prefers email contact', host: 'Michael Chen' },
-  { name: 'Charlie Lee', code: '112233', avatar: 'https://i.pravatar.cc/40?u=charlie', company: 'FutureWorks', phone: '555-8765', email: 'charlie@example.com', notes: 'Has dietary restrictions', host: 'Jessica Kim' },
+  { name: 'Alice Johnson', code: '123456', avatar: 'https://i.pravatar.cc/40?u=alice', company: 'DreamCorp', phone: '555-1234', email: 'alice@example.com', notes: 'Likes to arrive early', host: 'Samantha Ray', escorted: false },
+  { name: 'Bob Smith', code: '654321', avatar: 'https://i.pravatar.cc/40?u=bob', company: 'Innovatech', phone: '555-5678', email: 'bob@example.com', notes: 'Prefers email contact', host: 'Michael Chen', escorted: true },
+  { name: 'Charlie Lee', code: '112233', avatar: 'https://i.pravatar.cc/40?u=charlie', company: 'FutureWorks', phone: '555-8765', email: 'charlie@example.com', notes: 'Has dietary restrictions', host: 'Jessica Kim', escorted: false },
 ];
 
 export default function UserSearch() {
@@ -58,13 +58,25 @@ export default function UserSearch() {
             <ListItemText
               primary={option.name}
               secondary={
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span>{`Pin: ${option.code.slice(0, 3)} ${option.code.slice(3)}`}</span>
-                  <Tooltip title={option.host}>
-                    <Avatar sx={{ width: 24, height: 24, fontSize: 12 }}>
-                      {option.host.split(' ').map(n => n[0]).join('')}
-                    </Avatar>
-                  </Tooltip>
+                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span>{`Pin: ${option.code.slice(0, 3)} ${option.code.slice(3)}`}</span>
+                    <Tooltip title={`Visiting: ${option.host}`}>
+                      <Avatar sx={{ width: 24, height: 24, fontSize: 12 }}>
+                        {option.host.split(' ').map(n => n[0]).join('')}
+                      </Avatar>
+                    </Tooltip>
+                  </Box>
+                  <Chip
+                    label={option.escorted ? 'Escorted' : 'Un-escorted'}
+                    size="small"
+                    sx={{
+                      bgcolor: option.escorted ? 'error.main' : 'success.main',
+                      color: 'white',
+                      mt: 0.5,
+                      width: 'fit-content'
+                    }}
+                  />
                 </Box>
               }
             />
@@ -79,7 +91,7 @@ export default function UserSearch() {
               fullWidth
               size="large"
               placeholder="Visitor search..."
-              sx={{ height: 70 }}
+              sx={{ height: 90 }}
               InputProps={{
                 ...params.InputProps,
                 startAdornment: (
@@ -106,7 +118,7 @@ export default function UserSearch() {
             />
           </Box>
         )}
-        sx={{ width: 400 }}
+        sx={{ width: 600 }}
       />
       <Modal
         open={!!selectedUser}
