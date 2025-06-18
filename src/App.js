@@ -5,6 +5,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
 import PersonIcon from '@mui/icons-material/Person';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 export default function UserSearch() {
   const inputRef = useRef();
@@ -12,6 +14,7 @@ export default function UserSearch() {
   const [inputValue, setInputValue] = useState('');
   const [value, setValue] = useState(null);
   const [users, setUsers] = useState([]);
+  const [snackOpen, setSnackOpen] = useState(false);
 
   useEffect(() => {
     const firstNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Evan', 'Fiona', 'George', 'Hannah', 'Ian', 'Jane', 'Kevin', 'Laura', 'Martin', 'Natalie', 'Oscar', 'Paula', 'Quincy', 'Rachel', 'Steve', 'Tina'];
@@ -210,7 +213,10 @@ export default function UserSearch() {
                 fullWidth
                 variant="contained"
                 color="primary"
-                onClick={() => setSelectedUser(null)}
+                onClick={() => {
+                  setSelectedUser(null);
+                  setSnackOpen(true);
+                }}
               >
                 Print
               </Button>
@@ -218,6 +224,16 @@ export default function UserSearch() {
           </Card>
         </Box>
       </Modal>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        open={snackOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackOpen(false)}
+      >
+        <MuiAlert onClose={() => setSnackOpen(false)} severity="info" sx={{ width: '100%' }}>
+          Printing Pass
+        </MuiAlert>
+      </Snackbar>
     </Box>
   );
 }
