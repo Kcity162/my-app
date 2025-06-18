@@ -5,11 +5,24 @@ import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
 
-const users = [
-  { name: 'Alice Johnson', code: '123456', avatar: 'https://i.pravatar.cc/40?u=alice', company: 'DreamCorp', phone: '555-1234', email: 'alice@example.com', notes: 'Likes to arrive early', host: 'Samantha Ray', escorted: false },
-  { name: 'Bob Smith', code: '654321', avatar: 'https://i.pravatar.cc/40?u=bob', company: 'Innovatech', phone: '555-5678', email: 'bob@example.com', notes: 'Prefers email contact', host: 'Michael Chen', escorted: true },
-  { name: 'Charlie Lee', code: '112233', avatar: 'https://i.pravatar.cc/40?u=charlie', company: 'FutureWorks', phone: '555-8765', email: 'charlie@example.com', notes: 'Has dietary restrictions', host: 'Jessica Kim', escorted: false },
-];
+const users = Array.from({ length: 50 }, (_, i) => {
+  const names = ['Alice Johnson', 'Bob Smith', 'Charlie Lee', 'Diana Hart', 'Evan Brown', 'Fiona White', 'George Adams', 'Hannah Lee', 'Ian Scott', 'Jane Doe'];
+  const companies = ['DreamCorp', 'Innovatech', 'FutureWorks', 'CyberSoft', 'NanoTech'];
+  const hosts = ['Samantha Ray', 'Michael Chen', 'Jessica Kim', 'Robert Miles', 'Laura Stone'];
+  const notes = ['Likes to arrive early', 'Prefers email contact', 'Has dietary restrictions', 'Needs wheelchair access', 'Frequent visitor'];
+  const name = `${names[i % names.length]} ${i}`;
+  return {
+    name,
+    code: `${Math.floor(100000 + Math.random() * 900000)}`,
+    avatar: `https://i.pravatar.cc/40?u=${encodeURIComponent(name)}`,
+    company: companies[i % companies.length],
+    phone: `555-${1000 + i}`,
+    email: `user${i}@example.com`,
+    notes: notes[i % notes.length],
+    host: hosts[i % hosts.length],
+    escorted: i % 2 === 0
+  };
+});
 
 export default function UserSearch() {
   const inputRef = useRef();
