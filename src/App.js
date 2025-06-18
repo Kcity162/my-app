@@ -47,6 +47,9 @@ export default function UserSearch() {
         onChange={(event, newValue) => {
           setValue(newValue);
           setSelectedUser(newValue);
+          if (inputRef.current) {
+            inputRef.current.blur();
+          }
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
@@ -128,6 +131,7 @@ export default function UserSearch() {
           </Box>
         )}
         sx={{ width: 600 }}
+        openOnFocus
       />
       <Modal
         open={!!selectedUser}
