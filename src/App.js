@@ -23,7 +23,7 @@ export default function UserSearch() {
       return {
         name,
         code: `${Math.floor(100000 + Math.random() * 900000)}`,
-        avatar: `https://i.pravatar.cc/40?u=${encodeURIComponent(name)}`,
+        avatar: `https://i.pravatar.cc/200?u=${encodeURIComponent(name)}`,
         company: companies[i % companies.length],
         phone: `555-${1000 + i}`,
         email: `user${i}@example.com`,
@@ -179,11 +179,12 @@ export default function UserSearch() {
           }}
         >
           <Card>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200, bgcolor: '#eee' }}>
-              <Avatar src={selectedUser?.avatar} sx={{ width: 100, height: 100 }}>
-                <PersonIcon fontSize="large" />
-              </Avatar>
-            </Box>
+            <CardMedia
+              component="img"
+              height="200"
+              image={selectedUser?.avatar}
+              alt={selectedUser?.name}
+            />
             <CardContent>
               <Typography variant="h5">{selectedUser?.name}</Typography>
               <Typography variant="body2" color="text.secondary">
