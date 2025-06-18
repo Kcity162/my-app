@@ -14,24 +14,35 @@ export default function UserSearch() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const generatedUsers = Array.from({ length: 50 }, (_, i) => {
-      const names = ['Alice Johnson', 'Bob Smith', 'Charlie Lee', 'Diana Hart', 'Evan Brown', 'Fiona White', 'George Adams', 'Hannah Lee', 'Ian Scott', 'Jane Doe'];
-      const companies = ['DreamCorp', 'Innovatech', 'FutureWorks', 'CyberSoft', 'NanoTech'];
-      const hosts = ['Samantha Ray', 'Michael Chen', 'Jessica Kim', 'Robert Miles', 'Laura Stone'];
-      const notes = ['Likes to arrive early', 'Prefers email contact', 'Has dietary restrictions', 'Needs wheelchair access', 'Frequent visitor'];
-      const name = `${names[i % names.length]} ${i}`;
-      return {
+    const firstNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Evan', 'Fiona', 'George', 'Hannah', 'Ian', 'Jane', 'Kevin', 'Laura', 'Martin', 'Natalie', 'Oscar', 'Paula', 'Quincy', 'Rachel', 'Steve', 'Tina'];
+    const lastNames = ['Johnson', 'Smith', 'Lee', 'Hart', 'Brown', 'White', 'Adams', 'Stone', 'Scott', 'Doe', 'Taylor', 'Clark', 'Walker', 'Young', 'King', 'Hill', 'Green', 'Baker', 'Wright', 'Turner'];
+    const companies = ['DreamCorp', 'Innovatech', 'FutureWorks', 'CyberSoft', 'NanoTech'];
+    const hosts = ['Samantha Ray', 'Michael Chen', 'Jessica Kim', 'Robert Miles', 'Laura Stone'];
+    const notes = ['Likes to arrive early', 'Prefers email contact', 'Has dietary restrictions', 'Needs wheelchair access', 'Frequent visitor'];
+
+    const generatedUsers = [];
+    const usedNames = new Set();
+
+    while (generatedUsers.length < 50) {
+      const first = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const last = lastNames[Math.floor(Math.random() * lastNames.length)];
+      const name = `${first} ${last}`;
+      if (usedNames.has(name)) continue;
+      usedNames.add(name);
+
+      generatedUsers.push({
         name,
         code: `${Math.floor(100000 + Math.random() * 900000)}`,
         avatar: `https://i.pravatar.cc/200?u=${encodeURIComponent(name)}`,
-        company: companies[i % companies.length],
-        phone: `555-${1000 + i}`,
-        email: `user${i}@example.com`,
-        notes: notes[i % notes.length],
-        host: hosts[i % hosts.length],
-        escorted: Math.random() < Math.random()
-      };
-    });
+        company: companies[Math.floor(Math.random() * companies.length)],
+        phone: `555-${1000 + generatedUsers.length}`,
+        email: `${first.toLowerCase()}.${last.toLowerCase()}@example.com`,
+        notes: notes[Math.floor(Math.random() * notes.length)],
+        host: hosts[Math.floor(Math.random() * hosts.length)],
+        escorted: Math.random() < Math.random(),
+      });
+    }
+
     setUsers(generatedUsers);
   }, []);
 
