@@ -214,7 +214,7 @@ export default function UserSearch() {
             boxShadow: 24,
             borderRadius: 2,
             outline: 'none',
-            width: 300,
+            width: 400,
           }}
         >
           <Card>
