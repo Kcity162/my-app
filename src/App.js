@@ -53,6 +53,7 @@ export default function UserSearch() {
             fullWidth
             size="large"
             placeholder="Visitor search..."
+            sx={{ height: 70 }}
             InputProps={{
               ...params.InputProps,
               startAdornment: (
