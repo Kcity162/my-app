@@ -250,8 +250,8 @@ export default function UserSearch() {
                 placeholder="Last 4 characters of ID"
                 value={lastFourDigits}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  if (/^[A-Za-z0-9]*$/.test(value)) {
+                  const value = e.target.value.toUpperCase();
+                  if (/^[A-Z0-9]*$/.test(value) && value.length <= 4) {
                     setLastFourDigits(value);
                     setInputError(false);
                   }
