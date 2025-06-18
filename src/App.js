@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { Autocomplete, TextField, Avatar, ListItem, ListItemAvatar, ListItemText, Box } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
+import Chip from '@mui/material/Chip';
 
 const users = [
   { name: 'Alice Johnson', code: '123456', avatar: 'https://i.pravatar.cc/40?u=alice' },
@@ -37,6 +38,7 @@ export default function UserSearch() {
         options={users}
         getOptionLabel={(option) => `${option.name} (${option.code})`}
         noOptionsText="No visitor found"
+        popupIcon={null}
         renderOption={(props, option) => (
           <ListItem {...props}>
             <ListItemAvatar>
@@ -58,7 +60,20 @@ export default function UserSearch() {
               ...params.InputProps,
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon />
+                  <SearchIcon sx={{ mr: 1 }} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <Chip
+                    label="⌘ K"
+                    size="small"
+                    variant="outlined"
+                    component="div"
+                    clickable={false}
+                    tabIndex={-1}
+                    sx={{ ml: 1 }}
+                  />
                 </InputAdornment>
               ),
             }}
