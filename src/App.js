@@ -29,7 +29,7 @@ export default function UserSearch() {
         email: `user${i}@example.com`,
         notes: notes[i % notes.length],
         host: hosts[i % hosts.length],
-        escorted: i % 2 === 0
+        escorted: Math.random() < Math.random()
       };
     });
     setUsers(generatedUsers);
