@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Autocomplete, TextField, Avatar, ListItem, ListItemAvatar, ListItemText, Box, Modal, Typography } from '@mui/material';
+import { Autocomplete, TextField, Avatar, ListItem, ListItemAvatar, ListItemText, Box, Modal, Typography, Card, CardContent, CardMedia, CardActions, Button } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
 
 const users = [
-  { name: 'Alice Johnson', code: '123456', avatar: 'https://i.pravatar.cc/40?u=alice' },
-  { name: 'Bob Smith', code: '654321', avatar: 'https://i.pravatar.cc/40?u=bob' },
-  { name: 'Charlie Lee', code: '112233', avatar: 'https://i.pravatar.cc/40?u=charlie' },
+  { name: 'Alice Johnson', code: '123456', avatar: 'https://i.pravatar.cc/40?u=alice', company: 'DreamCorp', phone: '555-1234', email: 'alice@example.com', notes: 'Likes to arrive early' },
+  { name: 'Bob Smith', code: '654321', avatar: 'https://i.pravatar.cc/40?u=bob', company: 'Innovatech', phone: '555-5678', email: 'bob@example.com', notes: 'Prefers email contact' },
+  { name: 'Charlie Lee', code: '112233', avatar: 'https://i.pravatar.cc/40?u=charlie', company: 'FutureWorks', phone: '555-8765', email: 'charlie@example.com', notes: 'Has dietary restrictions' },
 ];
 
 export default function UserSearch() {
@@ -96,14 +96,33 @@ export default function UserSearch() {
             transform: 'translate(-50%, -50%)',
             bgcolor: 'background.paper',
             boxShadow: 24,
-            p: 4,
             borderRadius: 2,
             outline: 'none',
+            width: 300,
           }}
         >
-          <Typography variant="h4" component="h1">
-            {selectedUser?.name}
-          </Typography>
+          <Card>
+            <CardMedia
+              component="img"
+              height="200"
+              image={selectedUser?.avatar}
+              alt={selectedUser?.name}
+            />
+            <CardContent>
+              <Typography variant="h5">{selectedUser?.name}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                {selectedUser?.company}
+              </Typography>
+              <Typography variant="body2">📞 {selectedUser?.phone}</Typography>
+              <Typography variant="body2">✉️ {selectedUser?.email}</Typography>
+              <Typography variant="body2" mt={1}>{selectedUser?.notes}</Typography>
+            </CardContent>
+            <CardActions>
+              <Button fullWidth variant="contained" color="primary">
+                Print
+              </Button>
+            </CardActions>
+          </Card>
         </Box>
       </Modal>
     </Box>
