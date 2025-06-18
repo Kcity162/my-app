@@ -56,28 +56,28 @@ export default function UserSearch() {
               <Avatar src={option.avatar} />
             </ListItemAvatar>
             <ListItemText
-              primary={option.name}
-              secondary={
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span>{`Pin: ${option.code.slice(0, 3)} ${option.code.slice(3)}`}</span>
+              primary={
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>{option.name}</span>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Chip
+                      label={option.escorted ? 'Escorted' : 'Un-escorted'}
+                      size="small"
+                      sx={{
+                        bgcolor: option.escorted ? '#f8d7da' : '#d4edda',
+                        color: option.escorted ? '#721c24' : '#155724',
+                      }}
+                    />
                     <Tooltip title={`Visiting: ${option.host}`}>
                       <Avatar sx={{ width: 24, height: 24, fontSize: 12 }}>
                         {option.host.split(' ').map(n => n[0]).join('')}
                       </Avatar>
                     </Tooltip>
                   </Box>
-                  <Chip
-                    label={option.escorted ? 'Escorted' : 'Un-escorted'}
-                    size="small"
-                    sx={{
-                      bgcolor: option.escorted ? 'error.main' : 'success.main',
-                      color: 'white',
-                      mt: 0.5,
-                      width: 'fit-content'
-                    }}
-                  />
                 </Box>
+              }
+              secondary={
+                <span>{`Pin: ${option.code.slice(0, 3)} ${option.code.slice(3)}`}</span>
               }
             />
           </ListItem>
