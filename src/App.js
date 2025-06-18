@@ -71,9 +71,7 @@ export default function UserSearch() {
           <Box sx={{ position: 'relative', width: '100%' }}>
             <TextField
               {...params}
-              inputRef={(node) => {
-                if (node) inputRef.current = node.querySelector('input');
-              }}
+              inputRef={inputRef}
               variant="outlined"
               fullWidth
               size="large"
