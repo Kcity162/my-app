@@ -1,5 +1,7 @@
 import React from 'react';
 import { Autocomplete, TextField, Avatar, ListItem, ListItemAvatar, ListItemText, Box } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 
 const users = [
   { name: 'Alice Johnson', code: '123456', avatar: 'https://i.pravatar.cc/40?u=alice' },
@@ -35,6 +37,14 @@ export default function UserSearch() {
             variant="outlined"
             fullWidth
             size="large"
+            InputProps={{
+              ...params.InputProps,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
           />
         )}
         sx={{ width: 400 }}
