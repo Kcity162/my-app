@@ -118,7 +118,12 @@ export default function UserSearch() {
               <Typography variant="body2" mt={1}>{selectedUser?.notes}</Typography>
             </CardContent>
             <CardActions>
-              <Button fullWidth variant="contained" color="primary">
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={() => setSelectedUser(null)}
+              >
                 Print
               </Button>
             </CardActions>
