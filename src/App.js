@@ -48,36 +48,40 @@ export default function UserSearch() {
           </ListItem>
         )}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            inputRef={inputRef}
-            variant="outlined"
-            fullWidth
-            size="large"
-            placeholder="Visitor search..."
-            sx={{ height: 70 }}
-            InputProps={{
-              ...params.InputProps,
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon sx={{ mr: 1 }} />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Chip
-                    label="⌘ K"
-                    size="small"
-                    variant="outlined"
-                    component="div"
-                    clickable={false}
-                    tabIndex={-1}
-                    sx={{ ml: 1 }}
-                  />
-                </InputAdornment>
-              ),
-            }}
-          />
+          <Box sx={{ position: 'relative', width: '100%' }}>
+            <TextField
+              {...params}
+              inputRef={inputRef}
+              variant="outlined"
+              fullWidth
+              size="large"
+              placeholder="Visitor search..."
+              sx={{ height: 70 }}
+              InputProps={{
+                ...params.InputProps,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ mr: 1 }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Chip
+              label="⌘ K"
+              size="small"
+              variant="outlined"
+              component="div"
+              clickable={false}
+              tabIndex={-1}
+              sx={{
+                position: 'absolute',
+                top: '40%',
+                right: 12,
+                transform: 'translateY(-40%)',
+                pointerEvents: 'none',
+              }}
+            />
+          </Box>
         )}
         sx={{ width: 400 }}
       />
