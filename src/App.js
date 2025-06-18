@@ -60,6 +60,18 @@ export default function UserSearch() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  useEffect(() => {
+    const handlePrintShortcut = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && selectedUser) {
+        e.preventDefault();
+        setSelectedUser(null);
+        setSnackOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handlePrintShortcut);
+    return () => window.removeEventListener('keydown', handlePrintShortcut);
+  }, [selectedUser]);
+
 
 
   return (
