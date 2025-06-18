@@ -32,7 +32,6 @@ export default function UserSearch() {
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Search for a user"
             variant="outlined"
             fullWidth
             size="large"
