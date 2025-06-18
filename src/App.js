@@ -16,6 +16,8 @@ export default function UserSearch() {
   const [value, setValue] = useState(null);
   const [users, setUsers] = useState([]);
   const [snackOpen, setSnackOpen] = useState(false);
+  const [lastFourDigits, setLastFourDigits] = useState('');
+  const [inputError, setInputError] = useState(false);
 
   useEffect(() => {
     const firstNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Evan', 'Fiona', 'George', 'Hannah', 'Ian', 'Jane', 'Kevin', 'Laura', 'Martin', 'Natalie', 'Oscar', 'Paula', 'Quincy', 'Rachel', 'Steve', 'Tina'];
@@ -65,13 +67,19 @@ export default function UserSearch() {
     const handlePrintShortcut = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && selectedUser) {
         e.preventDefault();
+        if (lastFourDigits.length !== 4 || !/^\d+$/.test(lastFourDigits)) {
+          setInputError(true);
+          return;
+        }
+        setInputError(false);
         setSelectedUser(null);
         setSnackOpen(true);
+        setLastFourDigits('');
       }
     };
     window.addEventListener('keydown', handlePrintShortcut);
     return () => window.removeEventListener('keydown', handlePrintShortcut);
-  }, [selectedUser]);
+  }, [selectedUser, lastFourDigits]);
 
   useEffect(() => {
     if (selectedUser && noteInputRef.current) {
@@ -198,6 +206,7 @@ export default function UserSearch() {
           setSelectedUser(null);
           setInputValue('');
           setValue(null);
+          setLastFourDigits('');
           if (inputRef.current) {
             inputRef.current.value = '';
             inputRef.current.blur();
@@ -239,19 +248,40 @@ export default function UserSearch() {
                 variant="outlined"
                 size="small"
                 placeholder="Last 4 digit's of ID"
+                value={lastFourDigits}
+                onChange={(e) => {
+                  setLastFourDigits(e.target.value);
+                  setInputError(false);
+                }}
+                error={inputError}
+                helperText={inputError ? "Please enter exactly 4 digits." : ""}
                 sx={{ flex: 1 }}
               />
               <Button
                 variant="contained"
                 color="primary"
+                disabled={lastFourDigits.length !== 4 || !/^\d+$/.test(lastFourDigits)}
                 onClick={() => {
+                  if (lastFourDigits.length !== 4 || !/^\d+$/.test(lastFourDigits)) {
+                    setInputError(true);
+                    return;
+                  }
+                  setInputError(false);
                   setSelectedUser(null);
                   setSnackOpen(true);
+                  setLastFourDigits('');
                 }}
                 onKeyDown={(e) => {
                   if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    if (lastFourDigits.length !== 4 || !/^\d+$/.test(lastFourDigits)) {
+                      setInputError(true);
+                      return;
+                    }
+                    setInputError(false);
                     setSelectedUser(null);
                     setSnackOpen(true);
+                    setLastFourDigits('');
                   }
                 }}
               >
