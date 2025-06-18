@@ -54,7 +54,10 @@ export default function UserSearch() {
             <ListItemAvatar>
               <Avatar src={option.avatar} />
             </ListItemAvatar>
-            <ListItemText primary={option.name} secondary={`Pin: ${option.code}`} />
+            <ListItemText
+              primary={option.name}
+              secondary={`Pin: ${option.code.slice(0, 3)} ${option.code.slice(3)}`}
+            />
           </ListItem>
         )}
         renderInput={(params) => (
