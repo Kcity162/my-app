@@ -13,6 +13,8 @@ const users = [
 export default function UserSearch() {
   const inputRef = useRef();
   const [selectedUser, setSelectedUser] = useState(null);
+  const [inputValue, setInputValue] = useState('');
+  const [value, setValue] = useState(null);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -40,20 +42,28 @@ export default function UserSearch() {
         getOptionLabel={(option) => `${option.name} (${option.code})`}
         noOptionsText="No visitor found"
         popupIcon={null}
-        onChange={(event, value) => setSelectedUser(value)}
+        value={value}
+        onChange={(event, newValue) => {
+          setValue(newValue);
+          setSelectedUser(newValue);
+        }}
+        inputValue={inputValue}
+        onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
         renderOption={(props, option) => (
           <ListItem {...props}>
             <ListItemAvatar>
               <Avatar src={option.avatar} />
             </ListItemAvatar>
-            <ListItemText primary={option.name} secondary={`Code: ${option.code}`} />
+            <ListItemText primary={option.name} secondary={`Pin: ${option.code}`} />
           </ListItem>
         )}
         renderInput={(params) => (
           <Box sx={{ position: 'relative', width: '100%' }}>
             <TextField
               {...params}
-              inputRef={inputRef}
+              inputRef={(node) => {
+                if (node) inputRef.current = node.querySelector('input');
+              }}
               variant="outlined"
               fullWidth
               size="large"
@@ -87,7 +97,18 @@ export default function UserSearch() {
         )}
         sx={{ width: 400 }}
       />
-      <Modal open={!!selectedUser} onClose={() => setSelectedUser(null)}>
+      <Modal
+        open={!!selectedUser}
+        onClose={() => {
+          setSelectedUser(null);
+          setInputValue('');
+          setValue(null);
+          if (inputRef.current) {
+            inputRef.current.value = '';
+            inputRef.current.blur();
+          }
+        }}
+      >
         <Box
           sx={{
             position: 'absolute',
