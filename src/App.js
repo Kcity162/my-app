@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Autocomplete, TextField, Avatar, ListItem, ListItemAvatar, ListItemText, Box } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
@@ -10,6 +10,19 @@ const users = [
 ];
 
 export default function UserSearch() {
+  const inputRef = useRef();
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <Box
       sx={{
@@ -23,6 +36,7 @@ export default function UserSearch() {
       <Autocomplete
         options={users}
         getOptionLabel={(option) => `${option.name} (${option.code})`}
+        noOptionsText="No visitor found"
         renderOption={(props, option) => (
           <ListItem {...props}>
             <ListItemAvatar>
@@ -34,6 +48,7 @@ export default function UserSearch() {
         renderInput={(params) => (
           <TextField
             {...params}
+            inputRef={inputRef}
             variant="outlined"
             fullWidth
             size="large"
