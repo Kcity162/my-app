@@ -67,7 +67,7 @@ export default function UserSearch() {
     const handlePrintShortcut = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && selectedUser) {
         e.preventDefault();
-        if (lastFourDigits.length !== 4 || !/^\d+$/.test(lastFourDigits)) {
+        if (lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)) {
           setInputError(true);
           return;
         }
@@ -247,22 +247,22 @@ export default function UserSearch() {
                 inputRef={noteInputRef}
                 variant="outlined"
                 size="small"
-                placeholder="Last 4 digit's of ID"
+                placeholder="Last 4 characters of ID"
                 value={lastFourDigits}
                 onChange={(e) => {
                   setLastFourDigits(e.target.value);
                   setInputError(false);
                 }}
                 error={inputError}
-                helperText={inputError ? "Please enter exactly 4 digits." : ""}
+                helperText={inputError ? "Please enter exactly 4 characters." : ""}
                 sx={{ flex: 1 }}
               />
               <Button
                 variant="contained"
                 color="primary"
-                disabled={lastFourDigits.length !== 4 || !/^\d+$/.test(lastFourDigits)}
+                disabled={lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)}
                 onClick={() => {
-                  if (lastFourDigits.length !== 4 || !/^\d+$/.test(lastFourDigits)) {
+                  if (lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)) {
                     setInputError(true);
                     return;
                   }
@@ -274,7 +274,7 @@ export default function UserSearch() {
                 onKeyDown={(e) => {
                   if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
                     e.preventDefault();
-                    if (lastFourDigits.length !== 4 || !/^\d+$/.test(lastFourDigits)) {
+                    if (lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)) {
                       setInputError(true);
                       return;
                     }
