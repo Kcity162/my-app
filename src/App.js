@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { Autocomplete, TextField, Avatar, ListItem, ListItemAvatar, ListItemText, Box } from '@mui/material';
+import React, { useRef, useEffect, useState } from 'react';
+import { Autocomplete, TextField, Avatar, ListItem, ListItemAvatar, ListItemText, Box, Modal, Typography } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
@@ -12,6 +12,7 @@ const users = [
 
 export default function UserSearch() {
   const inputRef = useRef();
+  const [selectedUser, setSelectedUser] = useState(null);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -39,6 +40,7 @@ export default function UserSearch() {
         getOptionLabel={(option) => `${option.name} (${option.code})`}
         noOptionsText="No visitor found"
         popupIcon={null}
+        onChange={(event, value) => setSelectedUser(value)}
         renderOption={(props, option) => (
           <ListItem {...props}>
             <ListItemAvatar>
@@ -85,6 +87,25 @@ export default function UserSearch() {
         )}
         sx={{ width: 400 }}
       />
+      <Modal open={!!selectedUser} onClose={() => setSelectedUser(null)}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+            outline: 'none',
+          }}
+        >
+          <Typography variant="h4" component="h1">
+            {selectedUser?.name}
+          </Typography>
+        </Box>
+      </Modal>
     </Box>
   );
 }
