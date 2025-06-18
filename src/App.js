@@ -250,8 +250,11 @@ export default function UserSearch() {
                 placeholder="Last 4 characters of ID"
                 value={lastFourDigits}
                 onChange={(e) => {
-                  setLastFourDigits(e.target.value);
-                  setInputError(false);
+                  const value = e.target.value;
+                  if (/^[A-Za-z0-9]*$/.test(value)) {
+                    setLastFourDigits(value);
+                    setInputError(false);
+                  }
                 }}
                 error={inputError}
                 helperText={inputError ? "Please enter exactly 4 characters." : ""}
