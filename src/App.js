@@ -4,31 +4,36 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
 import Tooltip from '@mui/material/Tooltip';
-
-const users = Array.from({ length: 50 }, (_, i) => {
-  const names = ['Alice Johnson', 'Bob Smith', 'Charlie Lee', 'Diana Hart', 'Evan Brown', 'Fiona White', 'George Adams', 'Hannah Lee', 'Ian Scott', 'Jane Doe'];
-  const companies = ['DreamCorp', 'Innovatech', 'FutureWorks', 'CyberSoft', 'NanoTech'];
-  const hosts = ['Samantha Ray', 'Michael Chen', 'Jessica Kim', 'Robert Miles', 'Laura Stone'];
-  const notes = ['Likes to arrive early', 'Prefers email contact', 'Has dietary restrictions', 'Needs wheelchair access', 'Frequent visitor'];
-  const name = `${names[i % names.length]} ${i}`;
-  return {
-    name,
-    code: `${Math.floor(100000 + Math.random() * 900000)}`,
-    avatar: `https://i.pravatar.cc/40?u=${encodeURIComponent(name)}`,
-    company: companies[i % companies.length],
-    phone: `555-${1000 + i}`,
-    email: `user${i}@example.com`,
-    notes: notes[i % notes.length],
-    host: hosts[i % hosts.length],
-    escorted: i % 2 === 0
-  };
-});
+import PersonIcon from '@mui/icons-material/Person';
 
 export default function UserSearch() {
   const inputRef = useRef();
   const [selectedUser, setSelectedUser] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [value, setValue] = useState(null);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const generatedUsers = Array.from({ length: 50 }, (_, i) => {
+      const names = ['Alice Johnson', 'Bob Smith', 'Charlie Lee', 'Diana Hart', 'Evan Brown', 'Fiona White', 'George Adams', 'Hannah Lee', 'Ian Scott', 'Jane Doe'];
+      const companies = ['DreamCorp', 'Innovatech', 'FutureWorks', 'CyberSoft', 'NanoTech'];
+      const hosts = ['Samantha Ray', 'Michael Chen', 'Jessica Kim', 'Robert Miles', 'Laura Stone'];
+      const notes = ['Likes to arrive early', 'Prefers email contact', 'Has dietary restrictions', 'Needs wheelchair access', 'Frequent visitor'];
+      const name = `${names[i % names.length]} ${i}`;
+      return {
+        name,
+        code: `${Math.floor(100000 + Math.random() * 900000)}`,
+        avatar: `https://i.pravatar.cc/40?u=${encodeURIComponent(name)}`,
+        company: companies[i % companies.length],
+        phone: `555-${1000 + i}`,
+        email: `user${i}@example.com`,
+        notes: notes[i % notes.length],
+        host: hosts[i % hosts.length],
+        escorted: i % 2 === 0
+      };
+    });
+    setUsers(generatedUsers);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -78,7 +83,9 @@ export default function UserSearch() {
         renderOption={(props, option) => (
           <ListItem {...props}>
             <ListItemAvatar>
-              <Avatar src={option.avatar} />
+              <Avatar src={option.avatar}>
+                <PersonIcon fontSize="small" />
+              </Avatar>
             </ListItemAvatar>
             <ListItemText
               primary={
@@ -172,12 +179,11 @@ export default function UserSearch() {
           }}
         >
           <Card>
-            <CardMedia
-              component="img"
-              height="200"
-              image={selectedUser?.avatar}
-              alt={selectedUser?.name}
-            />
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 200, bgcolor: '#eee' }}>
+              <Avatar src={selectedUser?.avatar} sx={{ width: 100, height: 100 }}>
+                <PersonIcon fontSize="large" />
+              </Avatar>
+            </Box>
             <CardContent>
               <Typography variant="h5">{selectedUser?.name}</Typography>
               <Typography variant="body2" color="text.secondary">
