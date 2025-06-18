@@ -5,9 +5,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
 
 const users = [
-  { name: 'Alice Johnson', code: '123456', avatar: 'https://i.pravatar.cc/40?u=alice', company: 'DreamCorp', phone: '555-1234', email: 'alice@example.com', notes: 'Likes to arrive early' },
-  { name: 'Bob Smith', code: '654321', avatar: 'https://i.pravatar.cc/40?u=bob', company: 'Innovatech', phone: '555-5678', email: 'bob@example.com', notes: 'Prefers email contact' },
-  { name: 'Charlie Lee', code: '112233', avatar: 'https://i.pravatar.cc/40?u=charlie', company: 'FutureWorks', phone: '555-8765', email: 'charlie@example.com', notes: 'Has dietary restrictions' },
+  { name: 'Alice Johnson', code: '123456', avatar: 'https://i.pravatar.cc/40?u=alice', company: 'DreamCorp', phone: '555-1234', email: 'alice@example.com', notes: 'Likes to arrive early', host: 'Samantha Ray' },
+  { name: 'Bob Smith', code: '654321', avatar: 'https://i.pravatar.cc/40?u=bob', company: 'Innovatech', phone: '555-5678', email: 'bob@example.com', notes: 'Prefers email contact', host: 'Michael Chen' },
+  { name: 'Charlie Lee', code: '112233', avatar: 'https://i.pravatar.cc/40?u=charlie', company: 'FutureWorks', phone: '555-8765', email: 'charlie@example.com', notes: 'Has dietary restrictions', host: 'Jessica Kim' },
 ];
 
 export default function UserSearch() {
@@ -56,7 +56,14 @@ export default function UserSearch() {
             </ListItemAvatar>
             <ListItemText
               primary={option.name}
-              secondary={`Pin: ${option.code.slice(0, 3)} ${option.code.slice(3)}`}
+              secondary={
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>{`Pin: ${option.code.slice(0, 3)} ${option.code.slice(3)}`}</span>
+                  <Avatar sx={{ width: 24, height: 24, fontSize: 12 }}>
+                    {option.host.split(' ').map(n => n[0]).join('')}
+                  </Avatar>
+                </Box>
+              }
             />
           </ListItem>
         )}
