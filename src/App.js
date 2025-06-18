@@ -39,7 +39,7 @@ export default function UserSearch() {
       }}
     >
       <Autocomplete
-        options={users}
+        options={[...users].sort((a, b) => a.name.localeCompare(b.name))}
         getOptionLabel={(option) => `${option.name} (${option.code})`}
         noOptionsText="No visitor found"
         popupIcon={null}
@@ -50,6 +50,15 @@ export default function UserSearch() {
         }}
         inputValue={inputValue}
         onInputChange={(event, newInputValue) => setInputValue(newInputValue)}
+        groupBy={(option) => option.name[0].toUpperCase()}
+        renderGroup={(params) => (
+          <Box key={params.group} sx={{ paddingLeft: '2px', paddingRight: '2px' }}>
+            <Typography variant="subtitle2" sx={{ bgcolor: 'background.paper', padding: '4px 8px' }}>
+              {params.group}
+            </Typography>
+            {params.children}
+          </Box>
+        )}
         renderOption={(props, option) => (
           <ListItem {...props}>
             <ListItemAvatar>
@@ -91,7 +100,7 @@ export default function UserSearch() {
               fullWidth
               size="large"
               placeholder="Visitor search..."
-              sx={{ height: 90 }}
+              sx={{ height: 60 }}
               InputProps={{
                 ...params.InputProps,
                 startAdornment: (
