@@ -223,9 +223,14 @@ export default function UserSearch() {
               <Typography variant="body2">✉️ {selectedUser?.email}</Typography>
               <Typography variant="body2" mt={1}>{selectedUser?.notes}</Typography>
             </CardContent>
-            <CardActions>
+            <CardActions sx={{ display: 'flex', gap: 1 }}>
+              <TextField
+                variant="outlined"
+                size="small"
+                placeholder="Note"
+                sx={{ flex: 1 }}
+              />
               <Button
-                fullWidth
                 variant="contained"
                 color="primary"
                 onClick={() => {
