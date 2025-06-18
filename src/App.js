@@ -174,6 +174,7 @@ export default function UserSearch() {
                 right: 12,
                 transform: 'translateY(-40%)',
                 pointerEvents: 'none',
+                bgcolor: '#F1F2F4',
               }}
             />
           </Box>
@@ -238,7 +239,23 @@ export default function UserSearch() {
                   }
                 }}
               >
-                <span>Print <Typography variant="caption" sx={{ ml: 1 }}>(⌘ + ⏎)</Typography></span>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  Print
+                  <Chip
+                    label="⌘ + ⏎"
+                    size="small"
+                    color="default"
+                    component="div"
+                    clickable={false}
+                    tabIndex={-1}
+                    sx={{
+                      height: 20,
+                      fontSize: '0.75rem',
+                      pointerEvents: 'none',
+                      bgcolor: '#F1F2F4',
+                    }}
+                  />
+                </Box>
               </Button>
             </CardActions>
           </Card>
