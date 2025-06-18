@@ -10,6 +10,7 @@ import MuiAlert from '@mui/material/Alert';
 
 export default function UserSearch() {
   const inputRef = useRef();
+  const noteInputRef = useRef();
   const [selectedUser, setSelectedUser] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [value, setValue] = useState(null);
@@ -72,7 +73,16 @@ export default function UserSearch() {
     return () => window.removeEventListener('keydown', handlePrintShortcut);
   }, [selectedUser]);
 
-
+  useEffect(() => {
+    if (selectedUser && noteInputRef.current) {
+      setTimeout(() => {
+        noteInputRef.current.focus();
+        if (noteInputRef.current.setSelectionRange) {
+          noteInputRef.current.setSelectionRange(0, 0);
+        }
+      }, 100);
+    }
+  }, [selectedUser]);
 
   return (
     <Box
@@ -225,9 +235,10 @@ export default function UserSearch() {
             </CardContent>
             <CardActions sx={{ display: 'flex', gap: 1 }}>
               <TextField
+                inputRef={noteInputRef}
                 variant="outlined"
                 size="small"
-                placeholder="Note"
+                placeholder="Last 4 digit's of ID"
                 sx={{ flex: 1 }}
               />
               <Button
