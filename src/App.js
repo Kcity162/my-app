@@ -340,7 +340,91 @@ export default function UserSearch() {
                 </Select>
               </Box>
               <Box mt={2} />
-              <Typography variant="h5">{selectedUser?.name}</Typography>
+              <Box
+                sx={{
+                  position: 'relative',
+                  '&:hover .edit-button': { display: 'inline-flex' },
+                  mt: 1,
+                }}
+              >
+                {editingField === 'name' ? (
+                  <>
+                    <TextField
+                      size="small"
+                      value={editingValue}
+                      onChange={e => setEditingValue(e.target.value)}
+                      sx={{ mr: 1, minWidth: 120 }}
+                      autoFocus
+                      onBlur={() => {
+                        // Save on blur
+                        if (editingValue.trim() !== '') {
+                          const updatedUsers = users.map(u =>
+                            u.name === selectedUser.name ? { ...u, name: editingValue } : u
+                          );
+                          setUsers(updatedUsers);
+                          setSelectedUser({ ...selectedUser, name: editingValue });
+                        }
+                        setEditingField(null);
+                        setEditingValue('');
+                      }}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter') {
+                          if (editingValue.trim() !== '') {
+                            const updatedUsers = users.map(u =>
+                              u.name === selectedUser.name ? { ...u, name: editingValue } : u
+                            );
+                            setUsers(updatedUsers);
+                            setSelectedUser({ ...selectedUser, name: editingValue });
+                          }
+                          setEditingField(null);
+                          setEditingValue('');
+                        }
+                      }}
+                    />
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      onClick={() => {
+                        if (editingValue.trim() !== '') {
+                          const updatedUsers = users.map(u =>
+                            u.name === selectedUser.name ? { ...u, name: editingValue } : u
+                          );
+                          setUsers(updatedUsers);
+                          setSelectedUser({ ...selectedUser, name: editingValue });
+                        }
+                        setEditingField(null);
+                        setEditingValue('');
+                      }}
+                      sx={{ verticalAlign: 'middle' }}
+                    >
+                      <CheckIcon fontSize="small" />
+                    </IconButton>
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="h5" component="span">
+                      {selectedUser?.name}
+                    </Typography>
+                    <IconButton
+                      className="edit-button"
+                      size="small"
+                      sx={{
+                        position: 'absolute',
+                        right: 0,
+                        top: 0,
+                        display: 'none',
+                      }}
+                      onClick={() => {
+                        setEditingField('name');
+                        setEditingValue(selectedUser?.name || '');
+                      }}
+                      aria-label="Edit name"
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
+                  </>
+                )}
+              </Box>
               {/* Editable fields: company, phone, email, host, notes */}
               {/* Company */}
               <Box
