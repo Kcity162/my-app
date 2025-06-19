@@ -290,8 +290,8 @@ export default function UserSearch() {
               <Box mt={2} />
               <Typography variant="h5">{selectedUser?.name}</Typography>
               <Box mt={1}>
-                <Typography variant="body2" color="text.secondary">
-                  {selectedUser?.company}
+                <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  🏢 {selectedUser?.company}
                 </Typography>
               </Box>
               <Box mt={1}>
@@ -316,7 +316,9 @@ export default function UserSearch() {
                 </Typography>
               </Box>
               <Box mt={1}>
-                <Typography variant="body2">{selectedUser?.notes}</Typography>
+                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  📝 {selectedUser?.notes}
+                </Typography>
               </Box>
             </CardContent>
             <CardActions sx={{ display: 'flex', gap: 1 }}>
