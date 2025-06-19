@@ -19,6 +19,9 @@ export default function UserSearch() {
   const [snackOpen, setSnackOpen] = useState(false);
   const [lastFourDigits, setLastFourDigits] = useState('');
   const [inputError, setInputError] = useState(false);
+  const [hostDialogOpen, setHostDialogOpen] = useState(false);
+  const [messageText, setMessageText] = useState('');
+  const [messageError, setMessageError] = useState(false);
 
   useEffect(() => {
     const firstNames = ['Alice', 'Bob', 'Charlie', 'Diana', 'Evan', 'Fiona', 'George', 'Hannah', 'Ian', 'Jane', 'Kevin', 'Laura', 'Martin', 'Natalie', 'Oscar', 'Paula', 'Quincy', 'Rachel', 'Steve', 'Tina'];
@@ -83,6 +86,24 @@ export default function UserSearch() {
   }, [selectedUser, lastFourDigits]);
 
   useEffect(() => {
+    const handleMessageShortcut = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && hostDialogOpen) {
+        e.preventDefault();
+        if (messageText.trim() === '') {
+          setMessageError(true);
+          return;
+        }
+        setMessageError(false);
+        setHostDialogOpen(false);
+        setMessageText('');
+        setSnackOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handleMessageShortcut);
+    return () => window.removeEventListener('keydown', handleMessageShortcut);
+  }, [hostDialogOpen, messageText]);
+
+  useEffect(() => {
     if (selectedUser && noteInputRef.current) {
       setTimeout(() => {
         noteInputRef.current.focus();
@@ -91,6 +112,19 @@ export default function UserSearch() {
         }
       }, 100);
     }
+  }, [selectedUser]);
+
+  // Find host details for modal sample rendering
+  const hostDetails = React.useMemo(() => {
+    if (!selectedUser) return null;
+    // We'll create a mock host object for demonstration
+    return {
+      name: selectedUser.host,
+      avatar: `https://i.pravatar.cc/150?u=${encodeURIComponent(selectedUser.host)}`,
+      email: `${selectedUser.host.toLowerCase().replace(/\s+/g, '.')}@example.com`,
+      phone: '555-123-4567',
+      company: 'Host Company',
+    };
   }, [selectedUser]);
 
   return (
@@ -243,7 +277,16 @@ export default function UserSearch() {
               <Typography variant="body2">✉️ {selectedUser?.email}</Typography>
               <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <SupervisorAccountIcon sx={{ fontSize: 16, color: '#1976d2' }} />
-                <a href="#" style={{ color: '#1976d2', textDecoration: 'none' }}>{selectedUser?.host}</a>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setHostDialogOpen(true);
+                  }}
+                  style={{ color: '#1976d2', textDecoration: 'none', cursor: 'pointer' }}
+                >
+                  {selectedUser?.host}
+                </a>
               </Typography>
               <Typography variant="body2" mt={1}>{selectedUser?.notes}</Typography>
             </CardContent>
@@ -363,6 +406,115 @@ export default function UserSearch() {
           </Card>
         </Box>
       </Modal>
+      <Modal
+        open={hostDialogOpen}
+        onClose={() => {
+          setHostDialogOpen(false);
+          setMessageText('');
+          setMessageError(false);
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            borderRadius: 2,
+            outline: 'none',
+            width: 600,
+            maxWidth: '90vw',
+            display: 'flex',
+            gap: 2,
+            p: 2,
+          }}
+        >
+          {hostDetails && (
+            <Card sx={{ width: '40%', display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2 }}>
+              <Avatar
+                src={hostDetails.avatar}
+                alt={hostDetails.name}
+                sx={{ width: 100, height: 100, mb: 2 }}
+              />
+              <Typography variant="h6" align="center">{hostDetails.name}</Typography>
+              <Typography variant="body2" color="text.secondary" align="center">{hostDetails.company}</Typography>
+              <Typography variant="body2" align="center">📞 {hostDetails.phone}</Typography>
+              <Typography variant="body2" align="center">✉️ {hostDetails.email}</Typography>
+            </Card>
+          )}
+          <Box sx={{ width: '60%', display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <TextField
+              label="Message host"
+              multiline
+              minRows={5}
+              variant="outlined"
+              value={messageText}
+              onChange={(e) => {
+                setMessageText(e.target.value);
+                if (e.target.value.trim() !== '') {
+                  setMessageError(false);
+                }
+              }}
+              error={messageError}
+              helperText={messageError ? "Message cannot be empty." : ""}
+              fullWidth
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Tooltip
+                title={
+                  messageError && (
+                    <>
+                      Please enter a message before sending.
+                    </>
+                  )
+                }
+                open={messageError}
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+              >
+                <span>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={messageText.trim() === ''}
+                    onClick={() => {
+                      if (messageText.trim() === '') {
+                        setMessageError(true);
+                        return;
+                      }
+                      setMessageError(false);
+                      setHostDialogOpen(false);
+                      setMessageText('');
+                      setSnackOpen(true);
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      Send Message
+                      <Chip
+                        label="⌘ + ⏎"
+                        size="small"
+                        color="default"
+                        component="div"
+                        clickable={false}
+                        tabIndex={-1}
+                        sx={{
+                          height: 20,
+                          fontSize: '0.75rem',
+                          pointerEvents: 'none',
+                          bgcolor: '#F1F2F4',
+                        }}
+                      />
+                    </Box>
+                  </Button>
+                </span>
+              </Tooltip>
+            </Box>
+          </Box>
+        </Box>
+      </Modal>
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         open={snackOpen}
@@ -370,7 +522,7 @@ export default function UserSearch() {
         onClose={() => setSnackOpen(false)}
       >
         <MuiAlert onClose={() => setSnackOpen(false)} severity="info" sx={{ width: '100%' }}>
-          Printing Pass
+          {hostDialogOpen ? "Message sent" : "Printing Pass"}
         </MuiAlert>
       </Snackbar>
     </Box>
