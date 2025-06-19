@@ -275,23 +275,43 @@ export default function UserSearch() {
                   sx={{ flex: 1 }}
                 />
               </Tooltip>
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)}
-                onClick={() => {
-                  if (lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)) {
-                    setInputError(true);
-                    return;
-                  }
-                  setInputError(false);
-                  setSelectedUser(null);
-                  setSnackOpen(true);
-                  setLastFourDigits('');
-                }}
-                onKeyDown={(e) => {
-                  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-                    e.preventDefault();
+              {(lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)) ? (
+                <Tooltip
+                  title="Enter the last 4 characters of your legal ID (letters or numbers only). This is regularly checked—ask your supervisor if you need to skip this step."
+                  enterTouchDelay={0}
+                >
+                  <span>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      disabled
+                      sx={{ pointerEvents: 'none' }}
+                    >
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        Print
+                        <Chip
+                          label="⌘ + ⏎"
+                          size="small"
+                          color="default"
+                          component="div"
+                          clickable={false}
+                          tabIndex={-1}
+                          sx={{
+                            height: 20,
+                            fontSize: '0.75rem',
+                            pointerEvents: 'none',
+                            bgcolor: '#F1F2F4',
+                          }}
+                        />
+                      </Box>
+                    </Button>
+                  </span>
+                </Tooltip>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
                     if (lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)) {
                       setInputError(true);
                       return;
@@ -300,27 +320,40 @@ export default function UserSearch() {
                     setSelectedUser(null);
                     setSnackOpen(true);
                     setLastFourDigits('');
-                  }
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  Print
-                  <Chip
-                    label="⌘ + ⏎"
-                    size="small"
-                    color="default"
-                    component="div"
-                    clickable={false}
-                    tabIndex={-1}
-                    sx={{
-                      height: 20,
-                      fontSize: '0.75rem',
-                      pointerEvents: 'none',
-                      bgcolor: '#F1F2F4',
-                    }}
-                  />
-                </Box>
-              </Button>
+                  }}
+                  onKeyDown={(e) => {
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                      e.preventDefault();
+                      if (lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)) {
+                        setInputError(true);
+                        return;
+                      }
+                      setInputError(false);
+                      setSelectedUser(null);
+                      setSnackOpen(true);
+                      setLastFourDigits('');
+                    }
+                  }}
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    Print
+                    <Chip
+                      label="⌘ + ⏎"
+                      size="small"
+                      color="default"
+                      component="div"
+                      clickable={false}
+                      tabIndex={-1}
+                      sx={{
+                        height: 20,
+                        fontSize: '0.75rem',
+                        pointerEvents: 'none',
+                        bgcolor: '#F1F2F4',
+                      }}
+                    />
+                  </Box>
+                </Button>
+              )}
             </CardActions>
           </Card>
         </Box>
