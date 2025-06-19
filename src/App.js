@@ -247,7 +247,7 @@ export default function UserSearch() {
                 inputRef={noteInputRef}
                 variant="outlined"
                 size="small"
-                placeholder={inputError ? "Last 4 characters of ID required" : "Last 4 characters of ID"}
+                placeholder={inputError ? "Last 4 of ID required" : "Last 4 characters of ID"}
                 value={lastFourDigits}
                 onChange={(e) => {
                   const value = e.target.value.toUpperCase();
