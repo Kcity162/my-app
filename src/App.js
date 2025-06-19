@@ -247,7 +247,7 @@ export default function UserSearch() {
                 inputRef={noteInputRef}
                 variant="outlined"
                 size="small"
-                placeholder="Last 4 characters of ID"
+                placeholder={inputError ? "Last 4 characters of ID required" : "Last 4 characters of ID"}
                 value={lastFourDigits}
                 onChange={(e) => {
                   const value = e.target.value.toUpperCase();
@@ -257,7 +257,7 @@ export default function UserSearch() {
                   }
                 }}
                 error={inputError}
-                helperText={inputError ? "Please enter exactly 4 characters." : ""}
+                helperText=""
                 sx={{ flex: 1 }}
               />
               <Button
