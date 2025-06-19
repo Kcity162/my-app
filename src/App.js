@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Autocomplete, TextField, Avatar, ListItem, ListItemAvatar, ListItemText, Box, Modal, Typography, Card, CardContent, CardMedia, CardActions, Button } from '@mui/material';
+import { Autocomplete, TextField, Avatar, ListItem, ListItemAvatar, ListItemText, Box, Modal, Typography, Card, CardContent, CardMedia, CardActions, Button, MenuItem, Select } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
@@ -45,7 +45,7 @@ export default function UserSearch() {
         code: `${Math.floor(100000 + Math.random() * 900000)}`,
         avatar: `https://i.pravatar.cc/200?u=${encodeURIComponent(name)}`,
         company: companies[Math.floor(Math.random() * companies.length)],
-        phone: `555-${1000 + generatedUsers.length}`,
+        phone: `+44 7${Math.floor(100000000 + Math.random() * 90000000)}`,
         email: `${first.toLowerCase()}.${last.toLowerCase()}@example.com`,
         notes: notes[Math.floor(Math.random() * notes.length)],
         host: hosts[Math.floor(Math.random() * hosts.length)],
@@ -269,6 +269,24 @@ export default function UserSearch() {
               alt={selectedUser?.name}
             />
             <CardContent>
+              <Box sx={{ mt: 1 }}>
+                <Select
+                  size="small"
+                  fullWidth
+                  value={selectedUser?.escorted ? 'Escorted' : 'Un-escorted'}
+                  onChange={(e) => {
+                    const updatedUsers = users.map(u =>
+                      u.name === selectedUser.name ? { ...u, escorted: e.target.value === 'Escorted' } : u
+                    );
+                    setUsers(updatedUsers);
+                    setSelectedUser({ ...selectedUser, escorted: e.target.value === 'Escorted' });
+                  }}
+                  sx={{ bgcolor: selectedUser?.escorted ? '#f8d7da' : '#d4edda' }}
+                >
+                  <MenuItem value="Escorted">Escorted</MenuItem>
+                  <MenuItem value="Un-escorted">Un-escorted</MenuItem>
+                </Select>
+              </Box>
               <Typography variant="h5">{selectedUser?.name}</Typography>
               <Typography variant="body2" color="text.secondary">
                 {selectedUser?.company}
