@@ -240,6 +240,9 @@ export default function UserSearch() {
               </Typography>
               <Typography variant="body2">📞 {selectedUser?.phone}</Typography>
               <Typography variant="body2">✉️ {selectedUser?.email}</Typography>
+              <Typography variant="body2">
+                Visiting: <a href="#" style={{ color: '#1976d2', textDecoration: 'none' }}>{selectedUser?.host}</a>
+              </Typography>
               <Typography variant="body2" mt={1}>{selectedUser?.notes}</Typography>
             </CardContent>
             <CardActions sx={{ display: 'flex', gap: 1 }}>
