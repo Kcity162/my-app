@@ -243,23 +243,33 @@ export default function UserSearch() {
               <Typography variant="body2" mt={1}>{selectedUser?.notes}</Typography>
             </CardContent>
             <CardActions sx={{ display: 'flex', gap: 1 }}>
-              <TextField
-                inputRef={noteInputRef}
-                variant="outlined"
-                size="small"
-                placeholder={inputError ? "Last 4 of ID required" : "Last 4 characters of ID"}
-                value={lastFourDigits}
-                onChange={(e) => {
-                  const value = e.target.value.toUpperCase();
-                  if (/^[A-Z0-9]*$/.test(value) && value.length <= 4) {
-                    setLastFourDigits(value);
-                    setInputError(false);
-                  }
-                }}
-                error={inputError}
-                helperText=""
-                sx={{ flex: 1 }}
-              />
+              <Tooltip
+                title={
+                  <>
+                    Enter the last 4 characters of your legal ID (letters or numbers only).
+                    This is regularly checked—ask your supervisor if you need to skip this step.
+                  </>
+                }
+                enterTouchDelay={0}
+              >
+                <TextField
+                  inputRef={noteInputRef}
+                  variant="outlined"
+                  size="small"
+                  placeholder={inputError ? "Last 4 of ID required" : "Last 4 characters of ID"}
+                  value={lastFourDigits}
+                  onChange={(e) => {
+                    const value = e.target.value.toUpperCase();
+                    if (/^[A-Z0-9]*$/.test(value) && value.length <= 4) {
+                      setLastFourDigits(value);
+                      setInputError(false);
+                    }
+                  }}
+                  error={inputError}
+                  helperText=""
+                  sx={{ flex: 1 }}
+                />
+              </Tooltip>
               <Button
                 variant="contained"
                 color="primary"
