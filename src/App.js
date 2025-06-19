@@ -522,7 +522,7 @@ export default function UserSearch() {
         onClose={() => setSnackOpen(false)}
       >
         <MuiAlert onClose={() => setSnackOpen(false)} severity="info" sx={{ width: '100%' }}>
-          {hostDialogOpen ? "Message sent" : "Printing Pass"}
+          {hostDialogOpen ? `Email sent to ${selectedUser?.host}` : "Printing Pass"}
         </MuiAlert>
       </Snackbar>
     </Box>
