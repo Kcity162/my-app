@@ -479,11 +479,20 @@ export default function UserSearch() {
               <Box
                 mt={1}
                 sx={{
+                  cursor: 'pointer',
                   position: 'relative',
                   '&:hover .edit-button': { display: 'inline-flex' },
                 }}
+                onClick={() => {
+                  setEditingField('company');
+                  setEditingValue(selectedUser.company);
+                }}
               >
-                <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
                   🏢{' '}
                   {editingField === 'company' ? (
                     <>
@@ -508,7 +517,8 @@ export default function UserSearch() {
                       <IconButton
                         size="small"
                         color="primary"
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation();
                           const updatedUsers = users.map(u =>
                             u.name === selectedUser.name ? { ...u, company: editingValue } : u
                           );
@@ -534,7 +544,8 @@ export default function UserSearch() {
                           top: 0,
                           display: 'none',
                         }}
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation();
                           setEditingField('company');
                           setEditingValue(selectedUser?.company || '');
                         }}
@@ -550,11 +561,19 @@ export default function UserSearch() {
               <Box
                 mt={1}
                 sx={{
+                  cursor: 'pointer',
                   position: 'relative',
                   '&:hover .edit-button': { display: 'inline-flex' },
                 }}
+                onClick={() => {
+                  setEditingField('phone');
+                  setEditingValue(selectedUser.phone);
+                }}
               >
-                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography
+                  variant="body2"
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
                   📞{' '}
                   {editingField === 'phone' ? (
                     <>
@@ -579,7 +598,8 @@ export default function UserSearch() {
                       <IconButton
                         size="small"
                         color="primary"
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation();
                           const updatedUsers = users.map(u =>
                             u.name === selectedUser.name ? { ...u, phone: editingValue } : u
                           );
@@ -605,7 +625,8 @@ export default function UserSearch() {
                           top: 0,
                           display: 'none',
                         }}
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation();
                           setEditingField('phone');
                           setEditingValue(selectedUser?.phone || '');
                         }}
@@ -621,11 +642,19 @@ export default function UserSearch() {
               <Box
                 mt={1}
                 sx={{
+                  cursor: 'pointer',
                   position: 'relative',
                   '&:hover .edit-button': { display: 'inline-flex' },
                 }}
+                onClick={() => {
+                  setEditingField('email');
+                  setEditingValue(selectedUser.email);
+                }}
               >
-                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography
+                  variant="body2"
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
                   ✉️{' '}
                   {editingField === 'email' ? (
                     <>
@@ -650,7 +679,8 @@ export default function UserSearch() {
                       <IconButton
                         size="small"
                         color="primary"
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation();
                           const updatedUsers = users.map(u =>
                             u.name === selectedUser.name ? { ...u, email: editingValue } : u
                           );
@@ -676,7 +706,8 @@ export default function UserSearch() {
                           top: 0,
                           display: 'none',
                         }}
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation();
                           setEditingField('email');
                           setEditingValue(selectedUser?.email || '');
                         }}
@@ -692,11 +723,19 @@ export default function UserSearch() {
               <Box
                 mt={1}
                 sx={{
+                  cursor: 'pointer',
                   position: 'relative',
                   '&:hover .edit-button': { display: 'inline-flex' },
                 }}
+                onClick={() => {
+                  setEditingField('host');
+                  setEditingValue(selectedUser.host);
+                }}
               >
-                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography
+                  variant="body2"
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
                   <SupervisorAccountIcon sx={{ fontSize: 16, color: '#1976d2' }} />
                   {editingField === 'host' ? (
                     <>
@@ -721,7 +760,8 @@ export default function UserSearch() {
                       <IconButton
                         size="small"
                         color="primary"
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation();
                           const updatedUsers = users.map(u =>
                             u.name === selectedUser.name ? { ...u, host: editingValue } : u
                           );
@@ -741,6 +781,7 @@ export default function UserSearch() {
                         href="#"
                         onClick={e => {
                           e.preventDefault();
+                          e.stopPropagation();
                           setHostDialogOpen(true);
                         }}
                         style={{ color: '#1976d2', textDecoration: 'none', cursor: 'pointer' }}
@@ -756,7 +797,8 @@ export default function UserSearch() {
                           top: 0,
                           display: 'none',
                         }}
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation();
                           setEditingField('host');
                           setEditingValue(selectedUser?.host || '');
                         }}
@@ -772,11 +814,19 @@ export default function UserSearch() {
               <Box
                 mt={1}
                 sx={{
+                  cursor: 'pointer',
                   position: 'relative',
                   '&:hover .edit-button': { display: 'inline-flex' },
                 }}
+                onClick={() => {
+                  setEditingField('notes');
+                  setEditingValue(selectedUser.notes);
+                }}
               >
-                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography
+                  variant="body2"
+                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                >
                   📝{' '}
                   {editingField === 'notes' ? (
                     <>
@@ -801,7 +851,8 @@ export default function UserSearch() {
                       <IconButton
                         size="small"
                         color="primary"
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation();
                           const updatedUsers = users.map(u =>
                             u.name === selectedUser.name ? { ...u, notes: editingValue } : u
                           );
@@ -827,7 +878,8 @@ export default function UserSearch() {
                           top: 0,
                           display: 'none',
                         }}
-                        onClick={() => {
+                        onClick={e => {
+                          e.stopPropagation();
                           setEditingField('notes');
                           setEditingValue(selectedUser?.notes || '');
                         }}
