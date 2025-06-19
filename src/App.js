@@ -245,12 +245,17 @@ export default function UserSearch() {
             <CardActions sx={{ display: 'flex', gap: 1 }}>
               <Tooltip
                 title={
-                  <>
-                    Enter the last 4 characters of your legal ID (letters or numbers only).
-                    This is regularly checked—ask your supervisor if you need to skip this step.
-                  </>
+                  inputError && (
+                    <>
+                      Enter the last 4 characters of your legal ID (letters or numbers only).
+                      This is regularly checked—ask your supervisor if you need to skip this step.
+                    </>
+                  )
                 }
-                enterTouchDelay={0}
+                open={inputError}
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
               >
                 <TextField
                   inputRef={noteInputRef}
