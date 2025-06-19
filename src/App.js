@@ -19,6 +19,7 @@ import {
   IconButton,
   Menu,
 } from '@mui/material';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
@@ -314,12 +315,50 @@ export default function UserSearch() {
               </MenuItem>
               <MenuItem onClick={() => setCardMenuAnchor(null)}>Cancel</MenuItem>
             </Menu>
-            <CardMedia
-              component="img"
-              height="200"
-              image={selectedUser?.avatar}
-              alt={selectedUser?.name}
-            />
+            {/* Visitor photo with re-take overlay */}
+            <Box
+              sx={{
+                position: 'relative',
+                '&:hover .retake-overlay': { opacity: 1 },
+                width: '100%',
+                height: 200,
+                overflow: 'hidden',
+              }}
+            >
+              <CardMedia
+                component="img"
+                height="200"
+                image={selectedUser?.avatar}
+                alt={selectedUser?.name}
+                sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              <Box
+                className="retake-overlay"
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  bgcolor: 'rgba(0, 0, 0, 0.5)',
+                  color: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: 0,
+                  transition: 'opacity 0.3s',
+                  flexDirection: 'column',
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  // Re-take action logic here
+                  alert('Re-take photo clicked!');
+                }}
+              >
+                <CameraAltIcon sx={{ fontSize: 32, mb: 1 }} />
+                <Typography variant="body2">Re-take</Typography>
+              </Box>
+            </Box>
             <CardContent>
               <Box sx={{ mt: 1 }}>
                 <Select
