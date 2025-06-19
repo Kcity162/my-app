@@ -287,26 +287,37 @@ export default function UserSearch() {
                   <MenuItem value="Un-escorted">Un-escorted</MenuItem>
                 </Select>
               </Box>
+              <Box mt={2} />
               <Typography variant="h5">{selectedUser?.name}</Typography>
-              <Typography variant="body2" color="text.secondary">
-                {selectedUser?.company}
-              </Typography>
-              <Typography variant="body2">📞 {selectedUser?.phone}</Typography>
-              <Typography variant="body2">✉️ {selectedUser?.email}</Typography>
-              <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <SupervisorAccountIcon sx={{ fontSize: 16, color: '#1976d2' }} />
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setHostDialogOpen(true);
-                  }}
-                  style={{ color: '#1976d2', textDecoration: 'none', cursor: 'pointer' }}
-                >
-                  {selectedUser?.host}
-                </a>
-              </Typography>
-              <Typography variant="body2" mt={1}>{selectedUser?.notes}</Typography>
+              <Box mt={1}>
+                <Typography variant="body2" color="text.secondary">
+                  {selectedUser?.company}
+                </Typography>
+              </Box>
+              <Box mt={1}>
+                <Typography variant="body2">📞 {selectedUser?.phone}</Typography>
+              </Box>
+              <Box mt={1}>
+                <Typography variant="body2">✉️ {selectedUser?.email}</Typography>
+              </Box>
+              <Box mt={1}>
+                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <SupervisorAccountIcon sx={{ fontSize: 16, color: '#1976d2' }} />
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setHostDialogOpen(true);
+                    }}
+                    style={{ color: '#1976d2', textDecoration: 'none', cursor: 'pointer' }}
+                  >
+                    {selectedUser?.host}
+                  </a>
+                </Typography>
+              </Box>
+              <Box mt={1}>
+                <Typography variant="body2">{selectedUser?.notes}</Typography>
+              </Box>
             </CardContent>
             <CardActions sx={{ display: 'flex', gap: 1 }}>
               <Tooltip
