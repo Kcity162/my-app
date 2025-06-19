@@ -1,5 +1,24 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Autocomplete, TextField, Avatar, ListItem, ListItemAvatar, ListItemText, Box, Modal, Typography, Card, CardContent, CardMedia, CardActions, Button, MenuItem, Select, IconButton } from '@mui/material';
+import {
+  Autocomplete,
+  TextField,
+  Avatar,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Box,
+  Modal,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  CardActions,
+  Button,
+  MenuItem,
+  Select,
+  IconButton,
+  Menu,
+} from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import Chip from '@mui/material/Chip';
@@ -9,6 +28,8 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import EditIcon from '@mui/icons-material/Edit';
+import MoreVert from '@mui/icons-material/MoreVert';
+import CheckIcon from '@mui/icons-material/Check';
 
 export default function UserSearch() {
   const inputRef = useRef();
@@ -17,6 +38,9 @@ export default function UserSearch() {
   // State for editing fields in modal
   const [editingField, setEditingField] = useState(null);
   const [editingValue, setEditingValue] = useState('');
+  // Single card menu anchor state
+  const [cardMenuAnchor, setCardMenuAnchor] = useState(null);
+  const isCardMenuOpen = Boolean(cardMenuAnchor);
   const [inputValue, setInputValue] = useState('');
   const [value, setValue] = useState(null);
   const [users, setUsers] = useState([]);
@@ -267,7 +291,29 @@ export default function UserSearch() {
             width: 400,
           }}
         >
-          <Card>
+          <Card sx={{ position: 'relative' }}>
+            {/* Card-level menu button */}
+            <IconButton
+              onClick={(e) => setCardMenuAnchor(e.currentTarget)}
+              sx={{ position: 'absolute', top: 8, right: 8, zIndex: 10 }}
+            >
+              <MoreVert />
+            </IconButton>
+            <Menu
+              anchorEl={cardMenuAnchor}
+              open={isCardMenuOpen}
+              onClose={() => setCardMenuAnchor(null)}
+            >
+              <MenuItem
+                onClick={() => {
+                  setEditingField('card');
+                  setCardMenuAnchor(null);
+                }}
+              >
+                Edit
+              </MenuItem>
+              <MenuItem onClick={() => setCardMenuAnchor(null)}>Cancel</MenuItem>
+            </Menu>
             <CardMedia
               component="img"
               height="200"
@@ -297,25 +343,39 @@ export default function UserSearch() {
               <Typography variant="h5">{selectedUser?.name}</Typography>
               {/* Editable fields: company, phone, email, host, notes */}
               {/* Company */}
-              <Box mt={1} sx={{ position: 'relative', '&:hover .edit-icon': { opacity: 1 } }}>
-                {editingField === 'company' ? (
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <TextField
-                      size="small"
-                      value={editingValue}
-                      onChange={e => setEditingValue(e.target.value)}
-                      onBlur={() => {
-                        // Save on blur
-                        const updatedUsers = users.map(u =>
-                          u.name === selectedUser.name ? { ...u, company: editingValue } : u
-                        );
-                        setUsers(updatedUsers);
-                        setSelectedUser({ ...selectedUser, company: editingValue });
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') {
+              <Box
+                mt={1}
+                sx={{
+                  position: 'relative',
+                  '&:hover .edit-button': { display: 'inline-flex' },
+                }}
+              >
+                <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  🏢{' '}
+                  {editingField === 'company' ? (
+                    <>
+                      <TextField
+                        size="small"
+                        value={editingValue}
+                        onChange={e => setEditingValue(e.target.value)}
+                        sx={{ mr: 1, minWidth: 120 }}
+                        autoFocus
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            const updatedUsers = users.map(u =>
+                              u.name === selectedUser.name ? { ...u, company: editingValue } : u
+                            );
+                            setUsers(updatedUsers);
+                            setSelectedUser({ ...selectedUser, company: editingValue });
+                            setEditingField(null);
+                            setEditingValue('');
+                          }
+                        }}
+                      />
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => {
                           const updatedUsers = users.map(u =>
                             u.name === selectedUser.name ? { ...u, company: editingValue } : u
                           );
@@ -323,67 +383,70 @@ export default function UserSearch() {
                           setSelectedUser({ ...selectedUser, company: editingValue });
                           setEditingField(null);
                           setEditingValue('');
-                        } else if (e.key === 'Escape') {
-                          setEditingField(null);
-                          setEditingValue('');
-                        }
-                      }}
-                      autoFocus
-                      sx={{ flex: 1 }}
-                      variant="standard"
-                    />
-                    <Button
-                      size="small"
-                      onMouseDown={e => e.preventDefault()}
-                      onClick={() => {
-                        const updatedUsers = users.map(u =>
-                          u.name === selectedUser.name ? { ...u, company: editingValue } : u
-                        );
-                        setUsers(updatedUsers);
-                        setSelectedUser({ ...selectedUser, company: editingValue });
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Box>
-                ) : (
-                  <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    🏢 {selectedUser?.company}
-                    <IconButton
-                      className="edit-icon"
-                      size="small"
-                      sx={{ position: 'absolute', right: 0, top: 0, opacity: 0, transition: 'opacity 0.2s' }}
-                      onClick={() => {
-                        setEditingField('company');
-                        setEditingValue(selectedUser?.company || '');
-                      }}
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                  </Typography>
-                )}
+                        }}
+                        sx={{ verticalAlign: 'middle' }}
+                      >
+                        <CheckIcon fontSize="small" />
+                      </IconButton>
+                    </>
+                  ) : (
+                    <>
+                      {selectedUser?.company}
+                      <IconButton
+                        className="edit-button"
+                        size="small"
+                        sx={{
+                          position: 'absolute',
+                          right: 0,
+                          top: 0,
+                          display: 'none',
+                        }}
+                        onClick={() => {
+                          setEditingField('company');
+                          setEditingValue(selectedUser?.company || '');
+                        }}
+                        aria-label="Edit company"
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </>
+                  )}
+                </Typography>
               </Box>
               {/* Phone */}
-              <Box mt={1} sx={{ position: 'relative', '&:hover .edit-icon': { opacity: 1 } }}>
-                {editingField === 'phone' ? (
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <TextField
-                      size="small"
-                      value={editingValue}
-                      onChange={e => setEditingValue(e.target.value)}
-                      onBlur={() => {
-                        const updatedUsers = users.map(u =>
-                          u.name === selectedUser.name ? { ...u, phone: editingValue } : u
-                        );
-                        setUsers(updatedUsers);
-                        setSelectedUser({ ...selectedUser, phone: editingValue });
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') {
+              <Box
+                mt={1}
+                sx={{
+                  position: 'relative',
+                  '&:hover .edit-button': { display: 'inline-flex' },
+                }}
+              >
+                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  📞{' '}
+                  {editingField === 'phone' ? (
+                    <>
+                      <TextField
+                        size="small"
+                        value={editingValue}
+                        onChange={e => setEditingValue(e.target.value)}
+                        sx={{ mr: 1, minWidth: 120 }}
+                        autoFocus
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            const updatedUsers = users.map(u =>
+                              u.name === selectedUser.name ? { ...u, phone: editingValue } : u
+                            );
+                            setUsers(updatedUsers);
+                            setSelectedUser({ ...selectedUser, phone: editingValue });
+                            setEditingField(null);
+                            setEditingValue('');
+                          }
+                        }}
+                      />
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => {
                           const updatedUsers = users.map(u =>
                             u.name === selectedUser.name ? { ...u, phone: editingValue } : u
                           );
@@ -391,67 +454,70 @@ export default function UserSearch() {
                           setSelectedUser({ ...selectedUser, phone: editingValue });
                           setEditingField(null);
                           setEditingValue('');
-                        } else if (e.key === 'Escape') {
-                          setEditingField(null);
-                          setEditingValue('');
-                        }
-                      }}
-                      autoFocus
-                      sx={{ flex: 1 }}
-                      variant="standard"
-                    />
-                    <Button
-                      size="small"
-                      onMouseDown={e => e.preventDefault()}
-                      onClick={() => {
-                        const updatedUsers = users.map(u =>
-                          u.name === selectedUser.name ? { ...u, phone: editingValue } : u
-                        );
-                        setUsers(updatedUsers);
-                        setSelectedUser({ ...selectedUser, phone: editingValue });
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Box>
-                ) : (
-                  <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    📞 {selectedUser?.phone}
-                    <IconButton
-                      className="edit-icon"
-                      size="small"
-                      sx={{ position: 'absolute', right: 0, top: 0, opacity: 0, transition: 'opacity 0.2s' }}
-                      onClick={() => {
-                        setEditingField('phone');
-                        setEditingValue(selectedUser?.phone || '');
-                      }}
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                  </Typography>
-                )}
+                        }}
+                        sx={{ verticalAlign: 'middle' }}
+                      >
+                        <CheckIcon fontSize="small" />
+                      </IconButton>
+                    </>
+                  ) : (
+                    <>
+                      {selectedUser?.phone}
+                      <IconButton
+                        className="edit-button"
+                        size="small"
+                        sx={{
+                          position: 'absolute',
+                          right: 0,
+                          top: 0,
+                          display: 'none',
+                        }}
+                        onClick={() => {
+                          setEditingField('phone');
+                          setEditingValue(selectedUser?.phone || '');
+                        }}
+                        aria-label="Edit phone"
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </>
+                  )}
+                </Typography>
               </Box>
               {/* Email */}
-              <Box mt={1} sx={{ position: 'relative', '&:hover .edit-icon': { opacity: 1 } }}>
-                {editingField === 'email' ? (
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <TextField
-                      size="small"
-                      value={editingValue}
-                      onChange={e => setEditingValue(e.target.value)}
-                      onBlur={() => {
-                        const updatedUsers = users.map(u =>
-                          u.name === selectedUser.name ? { ...u, email: editingValue } : u
-                        );
-                        setUsers(updatedUsers);
-                        setSelectedUser({ ...selectedUser, email: editingValue });
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') {
+              <Box
+                mt={1}
+                sx={{
+                  position: 'relative',
+                  '&:hover .edit-button': { display: 'inline-flex' },
+                }}
+              >
+                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  ✉️{' '}
+                  {editingField === 'email' ? (
+                    <>
+                      <TextField
+                        size="small"
+                        value={editingValue}
+                        onChange={e => setEditingValue(e.target.value)}
+                        sx={{ mr: 1, minWidth: 120 }}
+                        autoFocus
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            const updatedUsers = users.map(u =>
+                              u.name === selectedUser.name ? { ...u, email: editingValue } : u
+                            );
+                            setUsers(updatedUsers);
+                            setSelectedUser({ ...selectedUser, email: editingValue });
+                            setEditingField(null);
+                            setEditingValue('');
+                          }
+                        }}
+                      />
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => {
                           const updatedUsers = users.map(u =>
                             u.name === selectedUser.name ? { ...u, email: editingValue } : u
                           );
@@ -459,67 +525,70 @@ export default function UserSearch() {
                           setSelectedUser({ ...selectedUser, email: editingValue });
                           setEditingField(null);
                           setEditingValue('');
-                        } else if (e.key === 'Escape') {
-                          setEditingField(null);
-                          setEditingValue('');
-                        }
-                      }}
-                      autoFocus
-                      sx={{ flex: 1 }}
-                      variant="standard"
-                    />
-                    <Button
-                      size="small"
-                      onMouseDown={e => e.preventDefault()}
-                      onClick={() => {
-                        const updatedUsers = users.map(u =>
-                          u.name === selectedUser.name ? { ...u, email: editingValue } : u
-                        );
-                        setUsers(updatedUsers);
-                        setSelectedUser({ ...selectedUser, email: editingValue });
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Box>
-                ) : (
-                  <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    ✉️ {selectedUser?.email}
-                    <IconButton
-                      className="edit-icon"
-                      size="small"
-                      sx={{ position: 'absolute', right: 0, top: 0, opacity: 0, transition: 'opacity 0.2s' }}
-                      onClick={() => {
-                        setEditingField('email');
-                        setEditingValue(selectedUser?.email || '');
-                      }}
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                  </Typography>
-                )}
+                        }}
+                        sx={{ verticalAlign: 'middle' }}
+                      >
+                        <CheckIcon fontSize="small" />
+                      </IconButton>
+                    </>
+                  ) : (
+                    <>
+                      {selectedUser?.email}
+                      <IconButton
+                        className="edit-button"
+                        size="small"
+                        sx={{
+                          position: 'absolute',
+                          right: 0,
+                          top: 0,
+                          display: 'none',
+                        }}
+                        onClick={() => {
+                          setEditingField('email');
+                          setEditingValue(selectedUser?.email || '');
+                        }}
+                        aria-label="Edit email"
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </>
+                  )}
+                </Typography>
               </Box>
               {/* Host */}
-              <Box mt={1} sx={{ position: 'relative', '&:hover .edit-icon': { opacity: 1 } }}>
-                {editingField === 'host' ? (
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <TextField
-                      size="small"
-                      value={editingValue}
-                      onChange={e => setEditingValue(e.target.value)}
-                      onBlur={() => {
-                        const updatedUsers = users.map(u =>
-                          u.name === selectedUser.name ? { ...u, host: editingValue } : u
-                        );
-                        setUsers(updatedUsers);
-                        setSelectedUser({ ...selectedUser, host: editingValue });
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') {
+              <Box
+                mt={1}
+                sx={{
+                  position: 'relative',
+                  '&:hover .edit-button': { display: 'inline-flex' },
+                }}
+              >
+                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <SupervisorAccountIcon sx={{ fontSize: 16, color: '#1976d2' }} />
+                  {editingField === 'host' ? (
+                    <>
+                      <TextField
+                        size="small"
+                        value={editingValue}
+                        onChange={e => setEditingValue(e.target.value)}
+                        sx={{ mr: 1, minWidth: 120 }}
+                        autoFocus
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            const updatedUsers = users.map(u =>
+                              u.name === selectedUser.name ? { ...u, host: editingValue } : u
+                            );
+                            setUsers(updatedUsers);
+                            setSelectedUser({ ...selectedUser, host: editingValue });
+                            setEditingField(null);
+                            setEditingValue('');
+                          }
+                        }}
+                      />
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => {
                           const updatedUsers = users.map(u =>
                             u.name === selectedUser.name ? { ...u, host: editingValue } : u
                           );
@@ -527,77 +596,79 @@ export default function UserSearch() {
                           setSelectedUser({ ...selectedUser, host: editingValue });
                           setEditingField(null);
                           setEditingValue('');
-                        } else if (e.key === 'Escape') {
-                          setEditingField(null);
-                          setEditingValue('');
-                        }
-                      }}
-                      autoFocus
-                      sx={{ flex: 1 }}
-                      variant="standard"
-                    />
-                    <Button
-                      size="small"
-                      onMouseDown={e => e.preventDefault()}
-                      onClick={() => {
-                        const updatedUsers = users.map(u =>
-                          u.name === selectedUser.name ? { ...u, host: editingValue } : u
-                        );
-                        setUsers(updatedUsers);
-                        setSelectedUser({ ...selectedUser, host: editingValue });
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Box>
-                ) : (
-                  <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <SupervisorAccountIcon sx={{ fontSize: 16, color: '#1976d2' }} />
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setHostDialogOpen(true);
-                      }}
-                      style={{ color: '#1976d2', textDecoration: 'none', cursor: 'pointer' }}
-                    >
-                      {selectedUser?.host}
-                    </a>
-                    <IconButton
-                      className="edit-icon"
-                      size="small"
-                      sx={{ position: 'absolute', right: 0, top: 0, opacity: 0, transition: 'opacity 0.2s' }}
-                      onClick={() => {
-                        setEditingField('host');
-                        setEditingValue(selectedUser?.host || '');
-                      }}
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                  </Typography>
-                )}
+                        }}
+                        sx={{ verticalAlign: 'middle' }}
+                      >
+                        <CheckIcon fontSize="small" />
+                      </IconButton>
+                    </>
+                  ) : (
+                    <>
+                      <a
+                        href="#"
+                        onClick={e => {
+                          e.preventDefault();
+                          setHostDialogOpen(true);
+                        }}
+                        style={{ color: '#1976d2', textDecoration: 'none', cursor: 'pointer' }}
+                      >
+                        {selectedUser?.host}
+                      </a>
+                      <IconButton
+                        className="edit-button"
+                        size="small"
+                        sx={{
+                          position: 'absolute',
+                          right: 0,
+                          top: 0,
+                          display: 'none',
+                        }}
+                        onClick={() => {
+                          setEditingField('host');
+                          setEditingValue(selectedUser?.host || '');
+                        }}
+                        aria-label="Edit host"
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </>
+                  )}
+                </Typography>
               </Box>
               {/* Notes */}
-              <Box mt={1} sx={{ position: 'relative', '&:hover .edit-icon': { opacity: 1 } }}>
-                {editingField === 'notes' ? (
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <TextField
-                      size="small"
-                      value={editingValue}
-                      onChange={e => setEditingValue(e.target.value)}
-                      onBlur={() => {
-                        const updatedUsers = users.map(u =>
-                          u.name === selectedUser.name ? { ...u, notes: editingValue } : u
-                        );
-                        setUsers(updatedUsers);
-                        setSelectedUser({ ...selectedUser, notes: editingValue });
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') {
+              <Box
+                mt={1}
+                sx={{
+                  position: 'relative',
+                  '&:hover .edit-button': { display: 'inline-flex' },
+                }}
+              >
+                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  📝{' '}
+                  {editingField === 'notes' ? (
+                    <>
+                      <TextField
+                        size="small"
+                        value={editingValue}
+                        onChange={e => setEditingValue(e.target.value)}
+                        sx={{ mr: 1, minWidth: 120 }}
+                        autoFocus
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            const updatedUsers = users.map(u =>
+                              u.name === selectedUser.name ? { ...u, notes: editingValue } : u
+                            );
+                            setUsers(updatedUsers);
+                            setSelectedUser({ ...selectedUser, notes: editingValue });
+                            setEditingField(null);
+                            setEditingValue('');
+                          }
+                        }}
+                      />
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={() => {
                           const updatedUsers = users.map(u =>
                             u.name === selectedUser.name ? { ...u, notes: editingValue } : u
                           );
@@ -605,47 +676,35 @@ export default function UserSearch() {
                           setSelectedUser({ ...selectedUser, notes: editingValue });
                           setEditingField(null);
                           setEditingValue('');
-                        } else if (e.key === 'Escape') {
-                          setEditingField(null);
-                          setEditingValue('');
-                        }
-                      }}
-                      autoFocus
-                      sx={{ flex: 1 }}
-                      variant="standard"
-                    />
-                    <Button
-                      size="small"
-                      onMouseDown={e => e.preventDefault()}
-                      onClick={() => {
-                        const updatedUsers = users.map(u =>
-                          u.name === selectedUser.name ? { ...u, notes: editingValue } : u
-                        );
-                        setUsers(updatedUsers);
-                        setSelectedUser({ ...selectedUser, notes: editingValue });
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                    >
-                      Save
-                    </Button>
-                  </Box>
-                ) : (
-                  <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    📝 {selectedUser?.notes}
-                    <IconButton
-                      className="edit-icon"
-                      size="small"
-                      sx={{ position: 'absolute', right: 0, top: 0, opacity: 0, transition: 'opacity 0.2s' }}
-                      onClick={() => {
-                        setEditingField('notes');
-                        setEditingValue(selectedUser?.notes || '');
-                      }}
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                  </Typography>
-                )}
+                        }}
+                        sx={{ verticalAlign: 'middle' }}
+                      >
+                        <CheckIcon fontSize="small" />
+                      </IconButton>
+                    </>
+                  ) : (
+                    <>
+                      {selectedUser?.notes}
+                      <IconButton
+                        className="edit-button"
+                        size="small"
+                        sx={{
+                          position: 'absolute',
+                          right: 0,
+                          top: 0,
+                          display: 'none',
+                        }}
+                        onClick={() => {
+                          setEditingField('notes');
+                          setEditingValue(selectedUser?.notes || '');
+                        }}
+                        aria-label="Edit notes"
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </>
+                  )}
+                </Typography>
               </Box>
             </CardContent>
             <CardActions sx={{ display: 'flex', gap: 1 }}>
