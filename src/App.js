@@ -145,9 +145,11 @@ export default function UserSearch() {
   useEffect(() => {
     if (selectedUser && noteInputRef.current) {
       setTimeout(() => {
-        noteInputRef.current.focus();
-        if (noteInputRef.current.setSelectionRange) {
-          noteInputRef.current.setSelectionRange(0, 0);
+        if (noteInputRef.current) {
+          noteInputRef.current.focus();
+          if (noteInputRef.current.setSelectionRange) {
+            noteInputRef.current.setSelectionRange(0, 0);
+          }
         }
       }, 100);
     }
@@ -391,9 +393,14 @@ export default function UserSearch() {
               <Box mt={2} />
               <Box
                 sx={{
+                  cursor: 'pointer',
                   position: 'relative',
                   '&:hover .edit-button': { display: 'inline-flex' },
                   mt: 1,
+                }}
+                onClick={() => {
+                  setEditingField('name');
+                  setEditingValue(selectedUser.name);
                 }}
               >
                 {editingField === 'name' ? (
@@ -433,7 +440,8 @@ export default function UserSearch() {
                     <IconButton
                       size="small"
                       color="primary"
-                      onClick={() => {
+                      onClick={e => {
+                        e.stopPropagation();
                         if (editingValue.trim() !== '') {
                           const updatedUsers = users.map(u =>
                             u.name === selectedUser.name ? { ...u, name: editingValue } : u
@@ -451,9 +459,22 @@ export default function UserSearch() {
                   </>
                 ) : (
                   <>
-                    <Typography variant="h5" component="span">
-                      {selectedUser?.name}
-                    </Typography>
+                    <Box
+                      onClick={() => {
+                        setEditingField('name');
+                        setEditingValue(selectedUser.name);
+                      }}
+                      sx={{
+                        cursor: 'pointer',
+                        position: 'relative',
+                        display: 'inline-block',
+                        '&:hover .edit-button': { display: 'inline-flex' }
+                      }}
+                    >
+                      <Typography variant="h5" component="span">
+                        {selectedUser?.name}
+                      </Typography>
+                    </Box>
                     <IconButton
                       className="edit-button"
                       size="small"
@@ -463,7 +484,8 @@ export default function UserSearch() {
                         top: 0,
                         display: 'none',
                       }}
-                      onClick={() => {
+                      onClick={e => {
+                        e.stopPropagation();
                         setEditingField('name');
                         setEditingValue(selectedUser?.name || '');
                       }}
