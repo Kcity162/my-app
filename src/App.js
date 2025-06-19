@@ -7,6 +7,7 @@ import Tooltip from '@mui/material/Tooltip';
 import PersonIcon from '@mui/icons-material/Person';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 
 export default function UserSearch() {
   const inputRef = useRef();
@@ -146,9 +147,9 @@ export default function UserSearch() {
                         color: option.escorted ? '#721c24' : '#155724',
                       }}
                     />
-                    <Tooltip title={`Visiting: ${option.host}`}>
-                      <Avatar sx={{ width: 24, height: 24, fontSize: 12 }}>
-                        {option.host.split(' ').map(n => n[0]).join('')}
+                    <Tooltip title={option.host}>
+                      <Avatar sx={{ width: 24, height: 24 }}>
+                        <SupervisorAccountIcon sx={{ fontSize: 16 }} />
                       </Avatar>
                     </Tooltip>
                   </Box>
@@ -240,8 +241,9 @@ export default function UserSearch() {
               </Typography>
               <Typography variant="body2">📞 {selectedUser?.phone}</Typography>
               <Typography variant="body2">✉️ {selectedUser?.email}</Typography>
-              <Typography variant="body2">
-                Visiting: <a href="#" style={{ color: '#1976d2', textDecoration: 'none' }}>{selectedUser?.host}</a>
+              <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <SupervisorAccountIcon sx={{ fontSize: 16, color: '#1976d2' }} />
+                <a href="#" style={{ color: '#1976d2', textDecoration: 'none' }}>{selectedUser?.host}</a>
               </Typography>
               <Typography variant="body2" mt={1}>{selectedUser?.notes}</Typography>
             </CardContent>
