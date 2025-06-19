@@ -32,6 +32,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import MoreVert from '@mui/icons-material/MoreVert';
 import CheckIcon from '@mui/icons-material/Check';
 
+// Utility function to get initials from a name
+const getInitials = (name) => {
+  if (!name) return '';
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase();
+};
+
 export default function UserSearch() {
   const inputRef = useRef();
   const noteInputRef = useRef();
@@ -211,8 +221,8 @@ export default function UserSearch() {
                       }}
                     />
                     <Tooltip title={option.host}>
-                      <Avatar sx={{ width: 24, height: 24 }}>
-                        <SupervisorAccountIcon sx={{ fontSize: 16 }} />
+                      <Avatar sx={{ width: 24, height: 24, fontSize: 12 }}>
+                        {getInitials(option.host)}
                       </Avatar>
                     </Tooltip>
                   </Box>
