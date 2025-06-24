@@ -34,13 +34,16 @@ import {
   DialogContent,
   Tabs,
   Tab,
+  ButtonGroup,
 } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ListIcon from '@mui/icons-material/List';
 import AddIcon from '@mui/icons-material/Add';
+import PrintIcon from '@mui/icons-material/Print';
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
@@ -57,6 +60,8 @@ import Link from '@mui/material/Link';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVert from '@mui/icons-material/MoreVert';
 import CheckIcon from '@mui/icons-material/Check';
+import SecurityIcon from '@mui/icons-material/Security';
+import NoEncryptionIcon from '@mui/icons-material/NoEncryption';
 
 // Utility function to get initials from a name
 const getInitials = (name) => {
@@ -96,6 +101,21 @@ export default function UserSearch() {
   const [viewMode, setViewMode] = useState('list');
   // Tab index for visitor modal
   const [tabIndex, setTabIndex] = useState(0);
+
+  // Split‑button menu for Escorted status
+  const [escMenuAnchor, setEscMenuAnchor] = useState(null);
+  const handleEscMenuOpen = (event) => setEscMenuAnchor(event.currentTarget);
+  const handleEscMenuClose = () => setEscMenuAnchor(null);
+  const handleEscMenuSelect = (status) => {
+    // Accepts "Escorted Pass" or "Un-escorted Pass"
+    const isEsc = status === 'Escorted Pass';
+    const updatedUsers = users.map(u =>
+      u.name === selectedUser.name ? { ...u, escorted: isEsc } : u
+    );
+    setUsers(updatedUsers);
+    setSelectedUser({ ...selectedUser, escorted: isEsc });
+    handleEscMenuClose();
+  };
 
   // Keyboard shortcut dialog state
   const [showShortcutTable, setShowShortcutTable] = useState(false);
@@ -714,6 +734,8 @@ export default function UserSearch() {
                             bgcolor: user.escorted ? '#f8d7da' : '#d4edda',
                             color: user.escorted ? '#721c24' : '#155724',
                           }}
+                          clickable={true}
+                          onClick={() => {}}
                         />
                       </CardContent>
                     </Card>
@@ -821,15 +843,28 @@ export default function UserSearch() {
                     <CameraAltIcon sx={{ color: '#fff', fontSize: 40 }} />
                   </Box>
                 </Box>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, textAlign: 'center' }}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0, textAlign: 'center' }}>
                   {selectedUser?.name}
                 </Typography>
+                {/* Escorted/Un-escorted Chip directly below the visitor's name, centered and spaced */}
+                <Chip
+                  label={selectedUser?.escorted ? 'Escorted' : 'Un-escorted'}
+                  size="small"
+                  sx={{
+                    mt: 1,
+                    mb: 2,
+                    bgcolor: selectedUser?.escorted ? '#f8d7da' : '#d4edda',
+                    color: selectedUser?.escorted ? '#721c24' : '#155724',
+                    display: 'flex',
+                    alignSelf: 'center',
+                  }}
+                />
                 <Tabs
                   orientation="vertical"
                   value={tabIndex}
                   onChange={(_, newValue) => setTabIndex(newValue)}
                   sx={{
-                    mt: 2,
+                    mt: 0,
                     width: '100%',
                     alignItems: 'flex-start',
                     '.MuiTabs-flexContainer': {
@@ -922,26 +957,7 @@ export default function UserSearch() {
                           Pass Details
                         </Typography>
                       </Divider>
-                      <Box sx={{ mb: 2 }}>
-                        <Select
-                          size="small"
-                          fullWidth
-                          value={selectedUser?.escorted ? 'Escorted' : 'Un-escorted'}
-                          onChange={(e) => {
-                            const updatedUsers = users.map(u =>
-                              u.name === selectedUser.name ? { ...u, escorted: e.target.value === 'Escorted' } : u
-                            );
-                            setUsers(updatedUsers);
-                            setSelectedUser({ ...selectedUser, escorted: e.target.value === 'Escorted' });
-                          }}
-                          sx={{
-                            bgcolor: selectedUser?.escorted ? '#f8d7da' : '#d4edda',
-                          }}
-                        >
-                          <MenuItem value="Escorted">Escorted</MenuItem>
-                          <MenuItem value="Un-escorted">Un-escorted</MenuItem>
-                        </Select>
-                      </Box>
+                      {/* Escorted/Unescorted dropdown moved to sidebar. */}
                     </Box>
                   )}
                   {tabIndex === 1 && (
@@ -1503,23 +1519,34 @@ export default function UserSearch() {
                     </Box>
                   )}
                 </Box>
-                {/* Save/Cancel Buttons */}
-                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      // For demo: just close the modal
-                      setSelectedUser(null);
-                      setInputValue('');
-                      setValue(null);
-                      setLastFourDigits('');
-                      setEditingField(null);
-                      setEditingValue('');
-                    }}
-                  >
-                    Save
-                  </Button>
+                {/* Bottom-right actions: Escorted/Unescorted split-button and Cancel button */}
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 5, gap: 0 }}>
+                  <ButtonGroup variant="contained" size="small" sx={{ ml: 2 }}>
+                    <Button
+                      sx={{
+                        textTransform: 'none',
+                        flexGrow: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                      }}
+                    >
+                      <PrintIcon sx={{ mr: 1 }} />
+                      {(selectedUser?.escorted ? 'Escorted Pass' : 'Un-escorted Pass').toUpperCase()}
+                    </Button>
+                    <Button
+                      size="small"
+                      aria-controls={Boolean(escMenuAnchor) ? 'esc-menu' : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={Boolean(escMenuAnchor) ? 'true' : undefined}
+                      onClick={handleEscMenuOpen}
+                      sx={{
+                        minWidth: 40,
+                      }}
+                    >
+                      <ArrowDropDownIcon />
+                    </Button>
+                  </ButtonGroup>
                   <Button
                     variant="outlined"
                     color="inherit"
@@ -1531,24 +1558,19 @@ export default function UserSearch() {
                       setEditingField(null);
                       setEditingValue('');
                     }}
+                    sx={{ ml: 2 }}
                   >
                     Cancel
                   </Button>
-                </Box>
-                {/* Print Pass Button aligned bottom-right */}
-                <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => {
-                      // For demo: show snackbar and close modal
-                      setSelectedUser(null);
-                      setSnackOpen(true);
-                      setLastFourDigits('');
-                    }}
+                  <Menu
+                    id="esc-menu"
+                    anchorEl={escMenuAnchor}
+                    open={Boolean(escMenuAnchor)}
+                    onClose={handleEscMenuClose}
                   >
-                    Print Pass
-                  </Button>
+                    <MenuItem onClick={() => handleEscMenuSelect('Escorted Pass')}>{'Escorted Pass'.toUpperCase()}</MenuItem>
+                    <MenuItem onClick={() => handleEscMenuSelect('Un-escorted Pass')}>{'Un-escorted Pass'.toUpperCase()}</MenuItem>
+                  </Menu>
                 </Box>
               </Grid>
             </Grid>
