@@ -311,13 +311,9 @@ export default function UserSearch() {
       </Grid>
       {/* Main Content Area with overlay above */}
       <Box sx={{ width: '100%', position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        {/* Sticky top container for search, filter, and toggle */}
+        {/* 🔍 Search Section */}
         <Box
           sx={{
-            position: 'sticky',
-            top: 0,
-            zIndex: 1300,
-            bgcolor: 'background.paper',
             pt: 1,
             pb: 0.5,
             px: 2,
@@ -443,70 +439,83 @@ export default function UserSearch() {
               open={isSearchOpen}
             />
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', maxWidth: '2200px', mx: 'auto', px: 0, pb: 0 }}>
-            <FormControl sx={{ minWidth: 200 }} size="small">
-              <Select
-                id="visitor-filter"
-                value={visitorFilter}
-                onChange={(e) => setVisitorFilter(e.target.value)}
-                displayEmpty
-                renderValue={(selected) => {
-                  const map = {
-                    today: 'Today',
-                    next7: 'Week',
-                    future: 'Month or more',
-                    past: 'Past',
-                  };
-                  return (
-                    <>
-                      <FilterListIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-                      {map[selected] || 'Filter'}
-                    </>
-                  );
-                }}
-              >
-                <MenuItem value="today">Today (T)</MenuItem>
-                <MenuItem value="next7">Week (W)</MenuItem>
-                <MenuItem value="future">Month or more (M)</MenuItem>
-                <Divider />
-                <MenuItem value="past">Past (P)</MenuItem>
-              </Select>
-            </FormControl>
-            {/* Toggle buttons with tooltips for view mode shortcuts */}
-            <ToggleButtonGroup
-              value={viewMode}
-              exclusive
-              onChange={(e, newView) => {
-                if (newView !== null) setViewMode(newView);
-              }}
-              size="small"
-              sx={{ bgcolor: '#f0f0f0', borderRadius: '20px' }}
-            >
-              <Tooltip title="Grid view (G)">
-                <ToggleButton value="grid" sx={{ borderRadius: '20px' }}>
-                  <GridViewIcon />
-                </ToggleButton>
-              </Tooltip>
-              <Tooltip title="List view (L)">
-                <ToggleButton value="list" sx={{ borderRadius: '20px' }}>
-                  <ListIcon />
-                </ToggleButton>
-              </Tooltip>
-            </ToggleButtonGroup>
-          </Box>
         </Box>
         {/* Main table area in scrollable container */}
+        {/* 🔄 Filter and View Toggle Section - Moves with table */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 2,
+            my: 2,
+            width: '100%',
+            maxWidth: '2200px',
+            mx: 'auto',
+            px: 0,
+          }}
+        >
+          <FormControl sx={{ minWidth: 200 }} size="small">
+            <Select
+              id="visitor-filter"
+              value={visitorFilter}
+              onChange={(e) => setVisitorFilter(e.target.value)}
+              displayEmpty
+              renderValue={(selected) => {
+                const map = {
+                  today: 'Today',
+                  next7: 'Week',
+                  future: 'Month or more',
+                  past: 'Past',
+                };
+                return (
+                  <>
+                    <FilterListIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
+                    {map[selected] || 'Filter'}
+                  </>
+                );
+              }}
+            >
+              <MenuItem value="today">Today (T)</MenuItem>
+              <MenuItem value="next7">Week (W)</MenuItem>
+              <MenuItem value="future">Month or more (M)</MenuItem>
+              <Divider />
+              <MenuItem value="past">Past (P)</MenuItem>
+            </Select>
+          </FormControl>
+          {/* Toggle buttons with tooltips for view mode shortcuts */}
+          <ToggleButtonGroup
+            value={viewMode}
+            exclusive
+            onChange={(e, newView) => {
+              if (newView !== null) setViewMode(newView);
+            }}
+            size="small"
+            sx={{ bgcolor: '#f0f0f0', borderRadius: '20px' }}
+          >
+            <Tooltip title="Grid view (G)">
+              <ToggleButton value="grid" sx={{ borderRadius: '20px' }}>
+                <GridViewIcon />
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip title="List view (L)">
+              <ToggleButton value="list" sx={{ borderRadius: '20px' }}>
+                <ListIcon />
+              </ToggleButton>
+            </Tooltip>
+          </ToggleButtonGroup>
+        </Box>
         <Box
           sx={{
             width: '100%',
             maxWidth: '2200px',
-            mt: 4,
+            mt: 0,
             mx: 'auto',
             height: '70vh',
             overflowY: 'auto',
           }}
         >
-          {/* Table view visible only if viewMode === 'list' */}
+          {/* 📋 Visitor List - Table View */}
           {viewMode === 'list' && (
             <Table sx={{ width: '100%', borderCollapse: 'collapse' }}>
               <TableHead>
@@ -660,7 +669,7 @@ export default function UserSearch() {
               </TableBody>
             </Table>
           )}
-          {/* Grid view visible only if viewMode === 'grid' */}
+          {/* 🧾 Visitor Grid - Card View */}
           {viewMode === 'grid' && (
             <Grid container spacing={2} sx={{ px: 2 }}>
               {[...users].sort((a, b) => a.name.localeCompare(b.name)).map((user) => (
@@ -711,6 +720,7 @@ export default function UserSearch() {
           )}
         </Box>
       </Box>
+      {/* 🪪 New Pass Modal (Triggered by FAB or Cmd/Ctrl + Enter) */}
       <Modal
         open={!!selectedUser}
         onClose={() => {
@@ -1595,7 +1605,7 @@ export default function UserSearch() {
         </MuiAlert>
       </Snackbar>
 
-      {/* Keyboard Shortcut Table Button and Dialog */}
+      {/* ➕ Floating Action Button for New Pass */}
       <Fab
         color="primary"
         aria-label="add"
