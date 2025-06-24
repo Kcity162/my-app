@@ -35,6 +35,8 @@ import {
   Tabs,
   Tab,
   ButtonGroup,
+  ListItemIcon,
+  ListItemText as MuiListItemText,
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
@@ -824,7 +826,7 @@ export default function UserSearch() {
             </Menu>
             <Grid container sx={{ minHeight: 420 }}>
               {/* Left column */}
-              <Grid item xs={4} sx={{ bgcolor: '#f5f5f5', display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}>
+              <Grid item xs={12} md="auto" sx={{ bgcolor: '#f5f5f5', display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}>
                 {/* Avatar with hover overlay for camera icon */}
                 <Box
                   sx={{
@@ -914,7 +916,7 @@ export default function UserSearch() {
                     }}
                   />
                   <Tab
-                    label="Visitor Info"
+                    label="Security"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -930,7 +932,7 @@ export default function UserSearch() {
                     }}
                   />
                   <Tab
-                    label="Security"
+                    label="Notes"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -945,61 +947,143 @@ export default function UserSearch() {
                       textAlign: 'left',
                     }}
                   />
-                  <Tab
-                    label="Notes"
-                    sx={{
-                      alignItems: 'flex-start',
-                      justifyContent: 'flex-start',
-                      textTransform: 'none',
-                      fontWeight: tabIndex === 3 ? 'bold' : 'normal',
-                      borderRadius: 2,
-                      px: 2,
-                      py: 1.5,
-                      mb: 0.5,
-                      backgroundColor: tabIndex === 3 ? 'primary.100' : 'inherit',
-                      minHeight: 48,
-                      textAlign: 'left',
-                    }}
-                  />
                 </Tabs>
               </Grid>
               {/* Right column */}
-              <Grid item xs={8} sx={{ p: 3, display: 'flex', flexDirection: 'column', minHeight: 420, position: 'relative' }}>
+              <Grid item xs={12} md sx={{ p: 3, display: 'flex', flexDirection: 'column', minHeight: 420, position: 'relative' }}>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>
-                    {['Pass Details', 'Visitor Info', 'Security', 'Notes'][tabIndex]}
+                    {['Pass Details', 'Security', 'Notes'][tabIndex]}
                   </Typography>
                   {/* Section Content */}
                   {tabIndex === 0 && (
                     <Box>
-                      <Divider sx={{ mb: 1 }}>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
-                          Pass Details
-                        </Typography>
-                      </Divider>
-                      {/* Escorted/Unescorted dropdown moved to sidebar. */}
-                    </Box>
-                  )}
-                  {tabIndex === 1 && (
-                    <Box>
-                      <Divider sx={{ mb: 1 }}>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
-                          Visitor Information
-                        </Typography>
-                      </Divider>
-                      {/* Name */}
-                      <Box
-                        sx={{
-                          cursor: 'pointer',
-                          position: 'relative',
-                          '&:hover .edit-button': { display: 'inline-flex' },
-                          mt: 1,
+                      {/* PassID and Valid Date Range */}
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                        PassID: BEN-01-001
+                      </Typography>
+                      {/* Valid Date Range */}
+                      <MenuItem
+                        sx={{ py: 1 }}
+                        onClick={() => {
+                          setEditingField('validDate');
+                          setEditingValue(selectedUser.validDate || '24 June – 30 June');
                         }}
+                      >
+                        <ListItemIcon>📅</ListItemIcon>
+                        {editingField === 'validDate' ? (
+                          <>
+                            <TextField
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 180 }}
+                              autoFocus
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, validDate: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, validDate: editingValue });
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, validDate: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, validDate: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                              sx={{ verticalAlign: 'middle' }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <MuiListItemText
+                            primary="Valid Date"
+                            secondary={selectedUser?.validDate || '24 June – 30 June'}
+                          />
+                        )}
+                      </MenuItem>
+                      {/* Visit Purpose Dropdown */}
+                      <MenuItem
+                        sx={{ py: 1 }}
+                        onClick={() => {
+                          setEditingField('purpose');
+                          setEditingValue(selectedUser.purpose || 'Social');
+                        }}
+                      >
+                        <ListItemIcon>🎯</ListItemIcon>
+                        {editingField === 'purpose' ? (
+                          <>
+                            <Select
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 140 }}
+                              autoFocus
+                            >
+                              {['Social', 'Work', 'Delivery', 'Contractor', 'Other'].map(option => (
+                                <MenuItem key={option} value={option}>
+                                  {option}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, purpose: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, purpose: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                              sx={{ verticalAlign: 'middle' }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <MuiListItemText
+                            primary="Purpose"
+                            secondary={selectedUser?.purpose || 'Social'}
+                          />
+                        )}
+                      </MenuItem>
+                      {/* Visitor Profile section */}
+                      <Box sx={{ width: '100%' }}>
+                        <Divider sx={{ mb: 1, mt: 3 }}>
+                          <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
+                            Visitor Profile
+                          </Typography>
+                        </Divider>
+                      </Box>
+                      {/* Name */}
+                      <MenuItem
+                        sx={{ py: 1 }}
                         onClick={() => {
                           setEditingField('name');
                           setEditingValue(selectedUser.name);
                         }}
                       >
+                        <ListItemIcon>
+                          <PersonIcon fontSize="small" />
+                        </ListItemIcon>
                         {editingField === 'name' ? (
                           <>
                             <TextField
@@ -1055,98 +1139,33 @@ export default function UserSearch() {
                             </IconButton>
                           </>
                         ) : (
-                          <>
-                            <Box
-                              onClick={() => {
-                                setEditingField('name');
-                                setEditingValue(selectedUser.name);
-                              }}
-                              sx={{
-                                cursor: 'pointer',
-                                position: 'relative',
-                                display: 'inline-block',
-                                '&:hover .edit-button': { display: 'inline-flex' }
-                              }}
-                            >
-                              <Typography
-                                component="a"
-                                href="#"
-                                variant="h5"
-                                sx={{
-                                  fontWeight: 'bold',
-                                  color: 'primary.main',
-                                  textDecoration: 'none',
-                                  '&:hover': { textDecoration: 'none' },
-                                }}
-                              >
-                                {selectedUser?.name}
-                              </Typography>
-                            </Box>
-                            <IconButton
-                              className="edit-button"
-                              size="small"
-                              sx={{
-                                position: 'absolute',
-                                right: 0,
-                                top: 0,
-                                display: 'none',
-                              }}
-                              onClick={e => {
-                                e.stopPropagation();
-                                setEditingField('name');
-                                setEditingValue(selectedUser?.name || '');
-                              }}
-                              aria-label="Edit name"
-                            >
-                              <EditIcon fontSize="small" />
-                            </IconButton>
-                          </>
+                          <MuiListItemText
+                            primary="Name"
+                            secondary={selectedUser?.name}
+                          />
                         )}
-                      </Box>
+                      </MenuItem>
                       {/* Company */}
-                      <Box
-                        mt={1}
-                        sx={{
-                          cursor: 'pointer',
-                          position: 'relative',
-                          '&:hover .edit-button': { display: 'inline-flex' },
-                        }}
+                      <MenuItem
+                        sx={{ py: 1 }}
                         onClick={() => {
                           setEditingField('company');
                           setEditingValue(selectedUser.company);
                         }}
                       >
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                        >
-                          🏢{' '}
-                          {editingField === 'company' ? (
-                            <>
-                              <TextField
-                                size="small"
-                                value={editingValue}
-                                onChange={e => setEditingValue(e.target.value)}
-                                sx={{ mr: 1, minWidth: 120 }}
-                                autoFocus
-                                onKeyDown={e => {
-                                  if (e.key === 'Enter') {
-                                    const updatedUsers = users.map(u =>
-                                      u.name === selectedUser.name ? { ...u, company: editingValue } : u
-                                    );
-                                    setUsers(updatedUsers);
-                                    setSelectedUser({ ...selectedUser, company: editingValue });
-                                    setEditingField(null);
-                                    setEditingValue('');
-                                  }
-                                }}
-                              />
-                              <IconButton
-                                size="small"
-                                color="primary"
-                                onClick={e => {
-                                  e.stopPropagation();
+                        <ListItemIcon>
+                          <BusinessIcon fontSize="small" />
+                        </ListItemIcon>
+                        {editingField === 'company' ? (
+                          <>
+                            <TextField
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 120 }}
+                              autoFocus
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
                                   const updatedUsers = users.map(u =>
                                     u.name === selectedUser.name ? { ...u, company: editingValue } : u
                                   );
@@ -1154,80 +1173,55 @@ export default function UserSearch() {
                                   setSelectedUser({ ...selectedUser, company: editingValue });
                                   setEditingField(null);
                                   setEditingValue('');
-                                }}
-                                sx={{ verticalAlign: 'middle' }}
-                              >
-                                <CheckIcon fontSize="small" />
-                              </IconButton>
-                            </>
-                          ) : (
-                            <>
-                              {selectedUser?.company}
-                              <IconButton
-                                className="edit-button"
-                                size="small"
-                                sx={{
-                                  position: 'absolute',
-                                  right: 0,
-                                  top: 0,
-                                  display: 'none',
-                                }}
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  setEditingField('company');
-                                  setEditingValue(selectedUser?.company || '');
-                                }}
-                                aria-label="Edit company"
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </>
-                          )}
-                        </Typography>
-                      </Box>
+                                }
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, company: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, company: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                              sx={{ verticalAlign: 'middle' }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <MuiListItemText
+                            primary="Company"
+                            secondary={selectedUser?.company}
+                          />
+                        )}
+                      </MenuItem>
                       {/* Phone */}
-                      <Box
-                        mt={1}
-                        sx={{
-                          cursor: 'pointer',
-                          position: 'relative',
-                          '&:hover .edit-button': { display: 'inline-flex' },
-                        }}
+                      <MenuItem
+                        sx={{ py: 1 }}
                         onClick={() => {
                           setEditingField('phone');
                           setEditingValue(selectedUser.phone);
                         }}
                       >
-                        <Typography
-                          variant="body2"
-                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                        >
-                          📞{' '}
-                          {editingField === 'phone' ? (
-                            <>
-                              <TextField
-                                size="small"
-                                value={editingValue}
-                                onChange={e => setEditingValue(e.target.value)}
-                                sx={{ mr: 1, minWidth: 120 }}
-                                autoFocus
-                                onKeyDown={e => {
-                                  if (e.key === 'Enter') {
-                                    const updatedUsers = users.map(u =>
-                                      u.name === selectedUser.name ? { ...u, phone: editingValue } : u
-                                    );
-                                    setUsers(updatedUsers);
-                                    setSelectedUser({ ...selectedUser, phone: editingValue });
-                                    setEditingField(null);
-                                    setEditingValue('');
-                                  }
-                                }}
-                              />
-                              <IconButton
-                                size="small"
-                                color="primary"
-                                onClick={e => {
-                                  e.stopPropagation();
+                        <ListItemIcon>
+                          <PhoneIcon fontSize="small" />
+                        </ListItemIcon>
+                        {editingField === 'phone' ? (
+                          <>
+                            <TextField
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 120 }}
+                              autoFocus
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
                                   const updatedUsers = users.map(u =>
                                     u.name === selectedUser.name ? { ...u, phone: editingValue } : u
                                   );
@@ -1235,80 +1229,55 @@ export default function UserSearch() {
                                   setSelectedUser({ ...selectedUser, phone: editingValue });
                                   setEditingField(null);
                                   setEditingValue('');
-                                }}
-                                sx={{ verticalAlign: 'middle' }}
-                              >
-                                <CheckIcon fontSize="small" />
-                              </IconButton>
-                            </>
-                          ) : (
-                            <>
-                              {selectedUser?.phone}
-                              <IconButton
-                                className="edit-button"
-                                size="small"
-                                sx={{
-                                  position: 'absolute',
-                                  right: 0,
-                                  top: 0,
-                                  display: 'none',
-                                }}
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  setEditingField('phone');
-                                  setEditingValue(selectedUser?.phone || '');
-                                }}
-                                aria-label="Edit phone"
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </>
-                          )}
-                        </Typography>
-                      </Box>
+                                }
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, phone: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, phone: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                              sx={{ verticalAlign: 'middle' }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <MuiListItemText
+                            primary="Phone"
+                            secondary={selectedUser?.phone}
+                          />
+                        )}
+                      </MenuItem>
                       {/* Email */}
-                      <Box
-                        mt={1}
-                        sx={{
-                          cursor: 'pointer',
-                          position: 'relative',
-                          '&:hover .edit-button': { display: 'inline-flex' },
-                        }}
+                      <MenuItem
+                        sx={{ py: 1 }}
                         onClick={() => {
                           setEditingField('email');
                           setEditingValue(selectedUser.email);
                         }}
                       >
-                        <Typography
-                          variant="body2"
-                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                        >
-                          ✉️{' '}
-                          {editingField === 'email' ? (
-                            <>
-                              <TextField
-                                size="small"
-                                value={editingValue}
-                                onChange={e => setEditingValue(e.target.value)}
-                                sx={{ mr: 1, minWidth: 120 }}
-                                autoFocus
-                                onKeyDown={e => {
-                                  if (e.key === 'Enter') {
-                                    const updatedUsers = users.map(u =>
-                                      u.name === selectedUser.name ? { ...u, email: editingValue } : u
-                                    );
-                                    setUsers(updatedUsers);
-                                    setSelectedUser({ ...selectedUser, email: editingValue });
-                                    setEditingField(null);
-                                    setEditingValue('');
-                                  }
-                                }}
-                              />
-                              <IconButton
-                                size="small"
-                                color="primary"
-                                onClick={e => {
-                                  e.stopPropagation();
+                        <ListItemIcon>
+                          <EmailIcon fontSize="small" />
+                        </ListItemIcon>
+                        {editingField === 'email' ? (
+                          <>
+                            <TextField
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 120 }}
+                              autoFocus
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
                                   const updatedUsers = users.map(u =>
                                     u.name === selectedUser.name ? { ...u, email: editingValue } : u
                                   );
@@ -1316,40 +1285,37 @@ export default function UserSearch() {
                                   setSelectedUser({ ...selectedUser, email: editingValue });
                                   setEditingField(null);
                                   setEditingValue('');
-                                }}
-                                sx={{ verticalAlign: 'middle' }}
-                              >
-                                <CheckIcon fontSize="small" />
-                              </IconButton>
-                            </>
-                          ) : (
-                            <>
-                              {selectedUser?.email}
-                              <IconButton
-                                className="edit-button"
-                                size="small"
-                                sx={{
-                                  position: 'absolute',
-                                  right: 0,
-                                  top: 0,
-                                  display: 'none',
-                                }}
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  setEditingField('email');
-                                  setEditingValue(selectedUser?.email || '');
-                                }}
-                                aria-label="Edit email"
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </>
-                          )}
-                        </Typography>
-                      </Box>
+                                }
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, email: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, email: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                              sx={{ verticalAlign: 'middle' }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <MuiListItemText
+                            primary="Email"
+                            secondary={selectedUser?.email}
+                          />
+                        )}
+                      </MenuItem>
                     </Box>
                   )}
-                  {tabIndex === 2 && (
+                  {tabIndex === 1 && (
                     <Box>
                       <Divider sx={{ mb: 1 }}>
                         <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
@@ -1449,7 +1415,7 @@ export default function UserSearch() {
                       </Box>
                     </Box>
                   )}
-                  {tabIndex === 3 && (
+                  {tabIndex === 2 && (
                     <Box>
                       <Divider sx={{ mb: 1 }}>
                         <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
