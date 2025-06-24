@@ -1457,91 +1457,70 @@ export default function UserSearch() {
                     </Box>
                   )}
                   {tabIndex === 2 && (
-                    <Box>
-                      <Divider sx={{ mb: 1 }}>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
-                          Notes
-                        </Typography>
-                      </Divider>
-                      <Box
-                        mt={1}
-                        sx={{
-                          cursor: 'pointer',
-                          position: 'relative',
-                          '&:hover .edit-button': { display: 'inline-flex' },
-                        }}
-                        onClick={() => {
-                          setEditingField('notes');
-                          setEditingValue(selectedUser.notes);
-                        }}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                        >
-                          📝{' '}
-                          {editingField === 'notes' ? (
-                            <>
-                              <TextField
-                                size="small"
-                                value={editingValue}
-                                onChange={e => setEditingValue(e.target.value)}
-                                sx={{ mr: 1, minWidth: 120 }}
-                                autoFocus
-                                onKeyDown={e => {
-                                  if (e.key === 'Enter') {
-                                    const updatedUsers = users.map(u =>
-                                      u.name === selectedUser.name ? { ...u, notes: editingValue } : u
-                                    );
-                                    setUsers(updatedUsers);
-                                    setSelectedUser({ ...selectedUser, notes: editingValue });
-                                    setEditingField(null);
-                                    setEditingValue('');
-                                  }
-                                }}
-                              />
-                              <IconButton
-                                size="small"
-                                color="primary"
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  const updatedUsers = users.map(u =>
-                                    u.name === selectedUser.name ? { ...u, notes: editingValue } : u
-                                  );
-                                  setUsers(updatedUsers);
-                                  setSelectedUser({ ...selectedUser, notes: editingValue });
-                                  setEditingField(null);
-                                  setEditingValue('');
-                                }}
-                                sx={{ verticalAlign: 'middle' }}
-                              >
-                                <CheckIcon fontSize="small" />
-                              </IconButton>
-                            </>
-                          ) : (
-                            <>
-                              {selectedUser?.notes}
-                              <IconButton
-                                className="edit-button"
-                                size="small"
-                                sx={{
-                                  position: 'absolute',
-                                  right: 0,
-                                  top: 0,
-                                  display: 'none',
-                                }}
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  setEditingField('notes');
-                                  setEditingValue(selectedUser?.notes || '');
-                                }}
-                                aria-label="Edit notes"
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </>
-                          )}
-                        </Typography>
+                    <Box
+                      sx={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '100%',
+                        pb: 0,
+                      }}
+                    >
+                      <Box sx={{ px: 1, pb: 2 }}>
+                        <TextField
+                          label="Add a note"
+                          placeholder="Type your message..."
+                          multiline
+                          minRows={3}
+                          variant="outlined"
+                          fullWidth
+                          value={editingValue}
+                          onChange={(e) => setEditingValue(e.target.value)}
+                        />
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                          <Button
+                            variant="contained"
+                            onClick={() => {
+                              const newNote = {
+                                text: editingValue,
+                                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                                user: getInitials('Kevin Torrington'),
+                              };
+                              const updatedUsers = users.map(u =>
+                                u.name === selectedUser.name
+                                  ? {
+                                      ...u,
+                                      notesTimeline: [...(u.notesTimeline || []), newNote],
+                                    }
+                                  : u
+                              );
+                              setUsers(updatedUsers);
+                              setSelectedUser(prev => ({
+                                ...prev,
+                                notesTimeline: [...(prev.notesTimeline || []), newNote],
+                              }));
+                              setEditingValue('');
+                            }}
+                            disabled={!editingValue.trim()}
+                          >
+                            Save Note
+                          </Button>
+                        </Box>
+                      </Box>
+                      <Box sx={{ flex: 1, overflowY: 'auto', px: 1, mb: 2 }}>
+                        {(selectedUser?.notesTimeline || [
+                          { text: 'Arrived early and waited in reception.', time: '09:15', user: 'JS' },
+                          { text: 'Requested extension on pass duration.', time: '11:45', user: 'AM' },
+                          { text: 'Left premises at 14:30, returned pass.', time: '14:35', user: 'JS' },
+                        ]).map((note, idx) => (
+                          <Box key={idx} sx={{ mb: 2, display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                            <Avatar sx={{ width: 32, height: 32 }}>{note.user}</Avatar>
+                            <Box>
+                              <Typography variant="body2">{note.text}</Typography>
+                              <Typography variant="caption" color="text.secondary">{note.time}</Typography>
+                            </Box>
+                          </Box>
+                        ))}
                       </Box>
                     </Box>
                   )}
