@@ -32,6 +32,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
@@ -92,6 +94,8 @@ export default function UserSearch() {
   const [messageError, setMessageError] = useState(false);
   // View mode state: 'list' or 'grid'
   const [viewMode, setViewMode] = useState('list');
+  // Tab index for visitor modal
+  const [tabIndex, setTabIndex] = useState(0);
 
   // Keyboard shortcut dialog state
   const [showShortcutTable, setShowShortcutTable] = useState(false);
@@ -746,11 +750,15 @@ export default function UserSearch() {
             boxShadow: 24,
             borderRadius: 2,
             outline: 'none',
-            width: 400,
+            width: 800,
+            maxWidth: '98vw',
+            minHeight: '520px',
+            p: 0,
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
-          <Card sx={{ position: 'relative' }}>
-            {/* Card-level menu button */}
+          <Card sx={{ position: 'relative', boxShadow: 'none', borderRadius: 2 }}>
             <IconButton
               onClick={(e) => setCardMenuAnchor(e.currentTarget)}
               sx={{ position: 'absolute', top: 8, right: 8, zIndex: 10 }}
@@ -772,716 +780,778 @@ export default function UserSearch() {
               </MenuItem>
               <MenuItem onClick={() => setCardMenuAnchor(null)}>Cancel</MenuItem>
             </Menu>
-            {/* Visitor photo with re-take overlay */}
-            <Box
-              sx={{
-                position: 'relative',
-                '&:hover .retake-overlay': { opacity: 1 },
-                width: '100%',
-                height: 200,
-                overflow: 'hidden',
-              }}
-            >
-              <CardMedia
-                component="img"
-                height="200"
-                image={selectedUser?.avatar}
-                alt={selectedUser?.name}
-                sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-              <Box
-                className="retake-overlay"
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  bgcolor: 'rgba(0, 0, 0, 0.5)',
-                  color: '#fff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  opacity: 0,
-                  transition: 'opacity 0.3s',
-                  flexDirection: 'column',
-                  cursor: 'pointer',
-                }}
-                onClick={() => {
-                  // Re-take action logic here
-                  alert('Re-take photo clicked!');
-                }}
-              >
-                <CameraAltIcon sx={{ fontSize: 32, mb: 1 }} />
-                <Typography variant="body2">Re-take</Typography>
-              </Box>
-            </Box>
-            <CardContent>
-              <Box sx={{ mt: 1 }}>
-                <Select
-                  size="small"
-                  fullWidth
-                  value={selectedUser?.escorted ? 'Escorted' : 'Un-escorted'}
-                  onChange={(e) => {
-                    const updatedUsers = users.map(u =>
-                      u.name === selectedUser.name ? { ...u, escorted: e.target.value === 'Escorted' } : u
-                    );
-                    setUsers(updatedUsers);
-                    setSelectedUser({ ...selectedUser, escorted: e.target.value === 'Escorted' });
+            <Grid container sx={{ minHeight: 420 }}>
+              {/* Left column */}
+              <Grid item xs={4} sx={{ bgcolor: '#f5f5f5', display: 'flex', flexDirection: 'column', alignItems: 'center', p: 3, borderTopLeftRadius: 8, borderBottomLeftRadius: 8 }}>
+                {/* Avatar with hover overlay for camera icon */}
+                <Box
+                  sx={{
+                    position: 'relative',
+                    mb: 2,
+                    width: 240,
+                    height: 240,
+                    '&:hover .avatar-overlay': { opacity: 1, pointerEvents: 'auto' },
                   }}
-                  sx={{ bgcolor: selectedUser?.escorted ? '#f8d7da' : '#d4edda' }}
                 >
-                  <MenuItem value="Escorted">Escorted</MenuItem>
-                  <MenuItem value="Un-escorted">Un-escorted</MenuItem>
-                </Select>
-              </Box>
-              <Box mt={2} />
-              <Box
-                sx={{
-                  cursor: 'pointer',
-                  position: 'relative',
-                  '&:hover .edit-button': { display: 'inline-flex' },
-                  mt: 1,
-                }}
-                onClick={() => {
-                  setEditingField('name');
-                  setEditingValue(selectedUser.name);
-                }}
-              >
-                {editingField === 'name' ? (
-                  <>
-                    <TextField
-                      size="small"
-                      value={editingValue}
-                      onChange={e => setEditingValue(e.target.value)}
-                      sx={{ mr: 1, minWidth: 120 }}
-                      autoFocus
-                      onBlur={() => {
-                        // Save on blur
-                        if (editingValue.trim() !== '') {
-                          const updatedUsers = users.map(u =>
-                            u.name === selectedUser.name ? { ...u, name: editingValue } : u
-                          );
-                          setUsers(updatedUsers);
-                          setSelectedUser({ ...selectedUser, name: editingValue });
-                        }
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') {
-                          if (editingValue.trim() !== '') {
-                            const updatedUsers = users.map(u =>
-                              u.name === selectedUser.name ? { ...u, name: editingValue } : u
-                            );
-                            setUsers(updatedUsers);
-                            setSelectedUser({ ...selectedUser, name: editingValue });
-                          }
-                          setEditingField(null);
-                          setEditingValue('');
-                        }
-                      }}
-                    />
-                    <IconButton
-                      size="small"
-                      color="primary"
-                      onClick={e => {
-                        e.stopPropagation();
-                        if (editingValue.trim() !== '') {
-                          const updatedUsers = users.map(u =>
-                            u.name === selectedUser.name ? { ...u, name: editingValue } : u
-                          );
-                          setUsers(updatedUsers);
-                          setSelectedUser({ ...selectedUser, name: editingValue });
-                        }
-                        setEditingField(null);
-                        setEditingValue('');
-                      }}
-                      sx={{ verticalAlign: 'middle' }}
-                    >
-                      <CheckIcon fontSize="small" />
-                    </IconButton>
-                  </>
-                ) : (
-                  <>
-                    <Box
-                      onClick={() => {
-                        setEditingField('name');
-                        setEditingValue(selectedUser.name);
-                      }}
-                      sx={{
-                        cursor: 'pointer',
-                        position: 'relative',
-                        display: 'inline-block',
-                        '&:hover .edit-button': { display: 'inline-flex' }
-                      }}
-                    >
-                      <Typography
-                        component="a"
-                        href="#"
-                        variant="h5"
-                        sx={{
-                          fontWeight: 'bold',
-                          color: 'primary.main',
-                          textDecoration: 'none',
-                          '&:hover': { textDecoration: 'none' },
-                        }}
-                      >
-                        {selectedUser?.name}
-                      </Typography>
-                    </Box>
-                    <IconButton
-                      className="edit-button"
-                      size="small"
-                      sx={{
-                        position: 'absolute',
-                        right: 0,
-                        top: 0,
-                        display: 'none',
-                      }}
-                      onClick={e => {
-                        e.stopPropagation();
-                        setEditingField('name');
-                        setEditingValue(selectedUser?.name || '');
-                      }}
-                      aria-label="Edit name"
-                    >
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                  </>
-                )}
-              </Box>
-              {/* Editable fields: company, phone, email, host, notes */}
-              {/* Company */}
-              <Box
-                mt={1}
-                sx={{
-                  cursor: 'pointer',
-                  position: 'relative',
-                  '&:hover .edit-button': { display: 'inline-flex' },
-                }}
-                onClick={() => {
-                  setEditingField('company');
-                  setEditingValue(selectedUser.company);
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                >
-                  🏢{' '}
-                  {editingField === 'company' ? (
-                    <>
-                      <TextField
-                        size="small"
-                        value={editingValue}
-                        onChange={e => setEditingValue(e.target.value)}
-                        sx={{ mr: 1, minWidth: 120 }}
-                        autoFocus
-                        onKeyDown={e => {
-                          if (e.key === 'Enter') {
-                            const updatedUsers = users.map(u =>
-                              u.name === selectedUser.name ? { ...u, company: editingValue } : u
-                            );
-                            setUsers(updatedUsers);
-                            setSelectedUser({ ...selectedUser, company: editingValue });
-                            setEditingField(null);
-                            setEditingValue('');
-                          }
-                        }}
-                      />
-                      <IconButton
-                        size="small"
-                        color="primary"
-                        onClick={e => {
-                          e.stopPropagation();
-                          const updatedUsers = users.map(u =>
-                            u.name === selectedUser.name ? { ...u, company: editingValue } : u
-                          );
-                          setUsers(updatedUsers);
-                          setSelectedUser({ ...selectedUser, company: editingValue });
-                          setEditingField(null);
-                          setEditingValue('');
-                        }}
-                        sx={{ verticalAlign: 'middle' }}
-                      >
-                        <CheckIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <>
-                      {selectedUser?.company}
-                      <IconButton
-                        className="edit-button"
-                        size="small"
-                        sx={{
-                          position: 'absolute',
-                          right: 0,
-                          top: 0,
-                          display: 'none',
-                        }}
-                        onClick={e => {
-                          e.stopPropagation();
-                          setEditingField('company');
-                          setEditingValue(selectedUser?.company || '');
-                        }}
-                        aria-label="Edit company"
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  )}
+                  <Avatar
+                    src={selectedUser?.avatar}
+                    alt={selectedUser?.name}
+                    sx={{ width: 240, height: 240, boxShadow: 1, fontSize: 96 }}
+                  />
+                  {/* Overlay for hover effect */}
+                  <Box
+                    className="avatar-overlay"
+                    sx={{
+                      transition: 'opacity 0.2s',
+                      opacity: 0,
+                      pointerEvents: 'none',
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      bgcolor: 'rgba(0,0,0,0.4)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '50%',
+                      zIndex: 2,
+                    }}
+                  >
+                    <CameraAltIcon sx={{ color: '#fff', fontSize: 40 }} />
+                  </Box>
+                </Box>
+                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2, textAlign: 'center' }}>
+                  {selectedUser?.name}
                 </Typography>
-              </Box>
-              {/* Phone */}
-              <Box
-                mt={1}
-                sx={{
-                  cursor: 'pointer',
-                  position: 'relative',
-                  '&:hover .edit-button': { display: 'inline-flex' },
-                }}
-                onClick={() => {
-                  setEditingField('phone');
-                  setEditingValue(selectedUser.phone);
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                >
-                  📞{' '}
-                  {editingField === 'phone' ? (
-                    <>
-                      <TextField
-                        size="small"
-                        value={editingValue}
-                        onChange={e => setEditingValue(e.target.value)}
-                        sx={{ mr: 1, minWidth: 120 }}
-                        autoFocus
-                        onKeyDown={e => {
-                          if (e.key === 'Enter') {
-                            const updatedUsers = users.map(u =>
-                              u.name === selectedUser.name ? { ...u, phone: editingValue } : u
-                            );
-                            setUsers(updatedUsers);
-                            setSelectedUser({ ...selectedUser, phone: editingValue });
-                            setEditingField(null);
-                            setEditingValue('');
-                          }
-                        }}
-                      />
-                      <IconButton
-                        size="small"
-                        color="primary"
-                        onClick={e => {
-                          e.stopPropagation();
-                          const updatedUsers = users.map(u =>
-                            u.name === selectedUser.name ? { ...u, phone: editingValue } : u
-                          );
-                          setUsers(updatedUsers);
-                          setSelectedUser({ ...selectedUser, phone: editingValue });
-                          setEditingField(null);
-                          setEditingValue('');
-                        }}
-                        sx={{ verticalAlign: 'middle' }}
-                      >
-                        <CheckIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <>
-                      {selectedUser?.phone}
-                      <IconButton
-                        className="edit-button"
-                        size="small"
-                        sx={{
-                          position: 'absolute',
-                          right: 0,
-                          top: 0,
-                          display: 'none',
-                        }}
-                        onClick={e => {
-                          e.stopPropagation();
-                          setEditingField('phone');
-                          setEditingValue(selectedUser?.phone || '');
-                        }}
-                        aria-label="Edit phone"
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  )}
-                </Typography>
-              </Box>
-              {/* Email */}
-              <Box
-                mt={1}
-                sx={{
-                  cursor: 'pointer',
-                  position: 'relative',
-                  '&:hover .edit-button': { display: 'inline-flex' },
-                }}
-                onClick={() => {
-                  setEditingField('email');
-                  setEditingValue(selectedUser.email);
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                >
-                  ✉️{' '}
-                  {editingField === 'email' ? (
-                    <>
-                      <TextField
-                        size="small"
-                        value={editingValue}
-                        onChange={e => setEditingValue(e.target.value)}
-                        sx={{ mr: 1, minWidth: 120 }}
-                        autoFocus
-                        onKeyDown={e => {
-                          if (e.key === 'Enter') {
-                            const updatedUsers = users.map(u =>
-                              u.name === selectedUser.name ? { ...u, email: editingValue } : u
-                            );
-                            setUsers(updatedUsers);
-                            setSelectedUser({ ...selectedUser, email: editingValue });
-                            setEditingField(null);
-                            setEditingValue('');
-                          }
-                        }}
-                      />
-                      <IconButton
-                        size="small"
-                        color="primary"
-                        onClick={e => {
-                          e.stopPropagation();
-                          const updatedUsers = users.map(u =>
-                            u.name === selectedUser.name ? { ...u, email: editingValue } : u
-                          );
-                          setUsers(updatedUsers);
-                          setSelectedUser({ ...selectedUser, email: editingValue });
-                          setEditingField(null);
-                          setEditingValue('');
-                        }}
-                        sx={{ verticalAlign: 'middle' }}
-                      >
-                        <CheckIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <>
-                      {selectedUser?.email}
-                      <IconButton
-                        className="edit-button"
-                        size="small"
-                        sx={{
-                          position: 'absolute',
-                          right: 0,
-                          top: 0,
-                          display: 'none',
-                        }}
-                        onClick={e => {
-                          e.stopPropagation();
-                          setEditingField('email');
-                          setEditingValue(selectedUser?.email || '');
-                        }}
-                        aria-label="Edit email"
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  )}
-                </Typography>
-              </Box>
-              {/* Host */}
-              <Box
-                mt={1}
-                sx={{
-                  cursor: 'pointer',
-                  position: 'relative',
-                  '&:hover .edit-button': { display: 'inline-flex' },
-                }}
-                onClick={() => {
-                  setEditingField('host');
-                  setEditingValue(selectedUser.host);
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                >
-                  <SupervisorAccountIcon sx={{ fontSize: 16, color: '#1976d2' }} />
-                  {editingField === 'host' ? (
-                    <>
-                      <TextField
-                        size="small"
-                        value={editingValue}
-                        onChange={e => setEditingValue(e.target.value)}
-                        sx={{ mr: 1, minWidth: 120 }}
-                        autoFocus
-                        onKeyDown={e => {
-                          if (e.key === 'Enter') {
-                            const updatedUsers = users.map(u =>
-                              u.name === selectedUser.name ? { ...u, host: editingValue } : u
-                            );
-                            setUsers(updatedUsers);
-                            setSelectedUser({ ...selectedUser, host: editingValue });
-                            setEditingField(null);
-                            setEditingValue('');
-                          }
-                        }}
-                      />
-                      <IconButton
-                        size="small"
-                        color="primary"
-                        onClick={e => {
-                          e.stopPropagation();
-                          const updatedUsers = users.map(u =>
-                            u.name === selectedUser.name ? { ...u, host: editingValue } : u
-                          );
-                          setUsers(updatedUsers);
-                          setSelectedUser({ ...selectedUser, host: editingValue });
-                          setEditingField(null);
-                          setEditingValue('');
-                        }}
-                        sx={{ verticalAlign: 'middle' }}
-                      >
-                        <CheckIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <>
-                      <a
-                        href="#"
-                        onClick={e => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          setHostDialogOpen(true);
-                        }}
-                        style={{ color: '#1976d2', textDecoration: 'none', cursor: 'pointer' }}
-                      >
-                        {selectedUser?.host}
-                      </a>
-                      <IconButton
-                        className="edit-button"
-                        size="small"
-                        sx={{
-                          position: 'absolute',
-                          right: 0,
-                          top: 0,
-                          display: 'none',
-                        }}
-                        onClick={e => {
-                          e.stopPropagation();
-                          setEditingField('host');
-                          setEditingValue(selectedUser?.host || '');
-                        }}
-                        aria-label="Edit host"
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  )}
-                </Typography>
-              </Box>
-              {/* Notes */}
-              <Box
-                mt={1}
-                sx={{
-                  cursor: 'pointer',
-                  position: 'relative',
-                  '&:hover .edit-button': { display: 'inline-flex' },
-                }}
-                onClick={() => {
-                  setEditingField('notes');
-                  setEditingValue(selectedUser.notes);
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                >
-                  📝{' '}
-                  {editingField === 'notes' ? (
-                    <>
-                      <TextField
-                        size="small"
-                        value={editingValue}
-                        onChange={e => setEditingValue(e.target.value)}
-                        sx={{ mr: 1, minWidth: 120 }}
-                        autoFocus
-                        onKeyDown={e => {
-                          if (e.key === 'Enter') {
-                            const updatedUsers = users.map(u =>
-                              u.name === selectedUser.name ? { ...u, notes: editingValue } : u
-                            );
-                            setUsers(updatedUsers);
-                            setSelectedUser({ ...selectedUser, notes: editingValue });
-                            setEditingField(null);
-                            setEditingValue('');
-                          }
-                        }}
-                      />
-                      <IconButton
-                        size="small"
-                        color="primary"
-                        onClick={e => {
-                          e.stopPropagation();
-                          const updatedUsers = users.map(u =>
-                            u.name === selectedUser.name ? { ...u, notes: editingValue } : u
-                          );
-                          setUsers(updatedUsers);
-                          setSelectedUser({ ...selectedUser, notes: editingValue });
-                          setEditingField(null);
-                          setEditingValue('');
-                        }}
-                        sx={{ verticalAlign: 'middle' }}
-                      >
-                        <CheckIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  ) : (
-                    <>
-                      {selectedUser?.notes}
-                      <IconButton
-                        className="edit-button"
-                        size="small"
-                        sx={{
-                          position: 'absolute',
-                          right: 0,
-                          top: 0,
-                          display: 'none',
-                        }}
-                        onClick={e => {
-                          e.stopPropagation();
-                          setEditingField('notes');
-                          setEditingValue(selectedUser?.notes || '');
-                        }}
-                        aria-label="Edit notes"
-                      >
-                        <EditIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  )}
-                </Typography>
-              </Box>
-            </CardContent>
-            <CardActions sx={{ display: 'flex', gap: 1 }}>
-              <Tooltip
-                title={
-                  inputError && (
-                    <>
-                      Enter the last 4 characters of your legal ID (letters or numbers only).
-                      This is regularly checked—ask your supervisor if you need to skip this step.
-                    </>
-                  )
-                }
-                open={inputError}
-                disableFocusListener
-                disableHoverListener
-                disableTouchListener
-              >
-                <TextField
-                  inputRef={noteInputRef}
-                  variant="outlined"
-                  size="small"
-                  placeholder={inputError ? "Last 4 of ID required" : "Last 4 characters of ID"}
-                  value={lastFourDigits}
-                  onChange={(e) => {
-                    const value = e.target.value.toUpperCase();
-                    if (/^[A-Z0-9]*$/.test(value) && value.length <= 4) {
-                      setLastFourDigits(value);
-                      setInputError(false);
-                    }
+                <Tabs
+                  orientation="vertical"
+                  value={tabIndex}
+                  onChange={(_, newValue) => setTabIndex(newValue)}
+                  sx={{
+                    mt: 2,
+                    width: '100%',
+                    alignItems: 'flex-start',
+                    '.MuiTabs-flexContainer': {
+                      flexDirection: 'column',
+                      gap: 1,
+                      width: '100%',
+                    },
                   }}
-                  error={inputError}
-                  helperText=""
-                  sx={{ flex: 1 }}
-                />
-              </Tooltip>
-              {(lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)) ? (
-                <Tooltip
-                  title="Enter the last 4 characters of your legal ID (letters or numbers only). This is regularly checked—ask your supervisor if you need to skip this step."
-                  enterTouchDelay={0}
+                  TabIndicatorProps={{
+                    sx: { left: 0, width: 3, borderRadius: 2, bgcolor: 'primary.main' }
+                  }}
                 >
-                  <span>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      disabled
-                      sx={{ pointerEvents: 'none' }}
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        Print
-                        <Chip
-                          label="⌘ + ⏎"
+                  <Tab
+                    label="Pass Details"
+                    sx={{
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-start',
+                      textTransform: 'none',
+                      fontWeight: tabIndex === 0 ? 'bold' : 'normal',
+                      borderRadius: 2,
+                      px: 2,
+                      py: 1.5,
+                      mb: 0.5,
+                      backgroundColor: tabIndex === 0 ? 'primary.100' : 'inherit',
+                      minHeight: 48,
+                      textAlign: 'left',
+                    }}
+                  />
+                  <Tab
+                    label="Visitor Info"
+                    sx={{
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-start',
+                      textTransform: 'none',
+                      fontWeight: tabIndex === 1 ? 'bold' : 'normal',
+                      borderRadius: 2,
+                      px: 2,
+                      py: 1.5,
+                      mb: 0.5,
+                      backgroundColor: tabIndex === 1 ? 'primary.100' : 'inherit',
+                      minHeight: 48,
+                      textAlign: 'left',
+                    }}
+                  />
+                  <Tab
+                    label="Security"
+                    sx={{
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-start',
+                      textTransform: 'none',
+                      fontWeight: tabIndex === 2 ? 'bold' : 'normal',
+                      borderRadius: 2,
+                      px: 2,
+                      py: 1.5,
+                      mb: 0.5,
+                      backgroundColor: tabIndex === 2 ? 'primary.100' : 'inherit',
+                      minHeight: 48,
+                      textAlign: 'left',
+                    }}
+                  />
+                  <Tab
+                    label="Notes"
+                    sx={{
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-start',
+                      textTransform: 'none',
+                      fontWeight: tabIndex === 3 ? 'bold' : 'normal',
+                      borderRadius: 2,
+                      px: 2,
+                      py: 1.5,
+                      mb: 0.5,
+                      backgroundColor: tabIndex === 3 ? 'primary.100' : 'inherit',
+                      minHeight: 48,
+                      textAlign: 'left',
+                    }}
+                  />
+                </Tabs>
+              </Grid>
+              {/* Right column */}
+              <Grid item xs={8} sx={{ p: 3, display: 'flex', flexDirection: 'column', minHeight: 420, position: 'relative' }}>
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>
+                    {['Pass Details', 'Visitor Info', 'Security', 'Notes'][tabIndex]}
+                  </Typography>
+                  {/* Section Content */}
+                  {tabIndex === 0 && (
+                    <Box>
+                      <Divider sx={{ mb: 1 }}>
+                        <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
+                          Pass Details
+                        </Typography>
+                      </Divider>
+                      <Box sx={{ mb: 2 }}>
+                        <Select
                           size="small"
-                          color="default"
-                          component="div"
-                          clickable={false}
-                          tabIndex={-1}
-                          sx={{
-                            height: 20,
-                            fontSize: '0.75rem',
-                            pointerEvents: 'none',
-                            bgcolor: '#F1F2F4',
+                          fullWidth
+                          value={selectedUser?.escorted ? 'Escorted' : 'Un-escorted'}
+                          onChange={(e) => {
+                            const updatedUsers = users.map(u =>
+                              u.name === selectedUser.name ? { ...u, escorted: e.target.value === 'Escorted' } : u
+                            );
+                            setUsers(updatedUsers);
+                            setSelectedUser({ ...selectedUser, escorted: e.target.value === 'Escorted' });
                           }}
-                        />
+                          sx={{
+                            bgcolor: selectedUser?.escorted ? '#f8d7da' : '#d4edda',
+                          }}
+                        >
+                          <MenuItem value="Escorted">Escorted</MenuItem>
+                          <MenuItem value="Un-escorted">Un-escorted</MenuItem>
+                        </Select>
                       </Box>
-                    </Button>
-                  </span>
-                </Tooltip>
-              ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    if (lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)) {
-                      setInputError(true);
-                      return;
-                    }
-                    setInputError(false);
-                    setSelectedUser(null);
-                    setSnackOpen(true);
-                    setLastFourDigits('');
-                  }}
-                  onKeyDown={(e) => {
-                    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-                      e.preventDefault();
-                      if (lastFourDigits.length !== 4 || !/^[A-Za-z0-9]{4}$/.test(lastFourDigits)) {
-                        setInputError(true);
-                        return;
-                      }
-                      setInputError(false);
+                    </Box>
+                  )}
+                  {tabIndex === 1 && (
+                    <Box>
+                      <Divider sx={{ mb: 1 }}>
+                        <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
+                          Visitor Information
+                        </Typography>
+                      </Divider>
+                      {/* Name */}
+                      <Box
+                        sx={{
+                          cursor: 'pointer',
+                          position: 'relative',
+                          '&:hover .edit-button': { display: 'inline-flex' },
+                          mt: 1,
+                        }}
+                        onClick={() => {
+                          setEditingField('name');
+                          setEditingValue(selectedUser.name);
+                        }}
+                      >
+                        {editingField === 'name' ? (
+                          <>
+                            <TextField
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 120 }}
+                              autoFocus
+                              onBlur={() => {
+                                // Save on blur
+                                if (editingValue.trim() !== '') {
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, name: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, name: editingValue });
+                                }
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  if (editingValue.trim() !== '') {
+                                    const updatedUsers = users.map(u =>
+                                      u.name === selectedUser.name ? { ...u, name: editingValue } : u
+                                    );
+                                    setUsers(updatedUsers);
+                                    setSelectedUser({ ...selectedUser, name: editingValue });
+                                  }
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                if (editingValue.trim() !== '') {
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, name: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, name: editingValue });
+                                }
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                              sx={{ verticalAlign: 'middle' }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <>
+                            <Box
+                              onClick={() => {
+                                setEditingField('name');
+                                setEditingValue(selectedUser.name);
+                              }}
+                              sx={{
+                                cursor: 'pointer',
+                                position: 'relative',
+                                display: 'inline-block',
+                                '&:hover .edit-button': { display: 'inline-flex' }
+                              }}
+                            >
+                              <Typography
+                                component="a"
+                                href="#"
+                                variant="h5"
+                                sx={{
+                                  fontWeight: 'bold',
+                                  color: 'primary.main',
+                                  textDecoration: 'none',
+                                  '&:hover': { textDecoration: 'none' },
+                                }}
+                              >
+                                {selectedUser?.name}
+                              </Typography>
+                            </Box>
+                            <IconButton
+                              className="edit-button"
+                              size="small"
+                              sx={{
+                                position: 'absolute',
+                                right: 0,
+                                top: 0,
+                                display: 'none',
+                              }}
+                              onClick={e => {
+                                e.stopPropagation();
+                                setEditingField('name');
+                                setEditingValue(selectedUser?.name || '');
+                              }}
+                              aria-label="Edit name"
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        )}
+                      </Box>
+                      {/* Company */}
+                      <Box
+                        mt={1}
+                        sx={{
+                          cursor: 'pointer',
+                          position: 'relative',
+                          '&:hover .edit-button': { display: 'inline-flex' },
+                        }}
+                        onClick={() => {
+                          setEditingField('company');
+                          setEditingValue(selectedUser.company);
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                        >
+                          🏢{' '}
+                          {editingField === 'company' ? (
+                            <>
+                              <TextField
+                                size="small"
+                                value={editingValue}
+                                onChange={e => setEditingValue(e.target.value)}
+                                sx={{ mr: 1, minWidth: 120 }}
+                                autoFocus
+                                onKeyDown={e => {
+                                  if (e.key === 'Enter') {
+                                    const updatedUsers = users.map(u =>
+                                      u.name === selectedUser.name ? { ...u, company: editingValue } : u
+                                    );
+                                    setUsers(updatedUsers);
+                                    setSelectedUser({ ...selectedUser, company: editingValue });
+                                    setEditingField(null);
+                                    setEditingValue('');
+                                  }
+                                }}
+                              />
+                              <IconButton
+                                size="small"
+                                color="primary"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, company: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, company: editingValue });
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }}
+                                sx={{ verticalAlign: 'middle' }}
+                              >
+                                <CheckIcon fontSize="small" />
+                              </IconButton>
+                            </>
+                          ) : (
+                            <>
+                              {selectedUser?.company}
+                              <IconButton
+                                className="edit-button"
+                                size="small"
+                                sx={{
+                                  position: 'absolute',
+                                  right: 0,
+                                  top: 0,
+                                  display: 'none',
+                                }}
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  setEditingField('company');
+                                  setEditingValue(selectedUser?.company || '');
+                                }}
+                                aria-label="Edit company"
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </>
+                          )}
+                        </Typography>
+                      </Box>
+                      {/* Phone */}
+                      <Box
+                        mt={1}
+                        sx={{
+                          cursor: 'pointer',
+                          position: 'relative',
+                          '&:hover .edit-button': { display: 'inline-flex' },
+                        }}
+                        onClick={() => {
+                          setEditingField('phone');
+                          setEditingValue(selectedUser.phone);
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                        >
+                          📞{' '}
+                          {editingField === 'phone' ? (
+                            <>
+                              <TextField
+                                size="small"
+                                value={editingValue}
+                                onChange={e => setEditingValue(e.target.value)}
+                                sx={{ mr: 1, minWidth: 120 }}
+                                autoFocus
+                                onKeyDown={e => {
+                                  if (e.key === 'Enter') {
+                                    const updatedUsers = users.map(u =>
+                                      u.name === selectedUser.name ? { ...u, phone: editingValue } : u
+                                    );
+                                    setUsers(updatedUsers);
+                                    setSelectedUser({ ...selectedUser, phone: editingValue });
+                                    setEditingField(null);
+                                    setEditingValue('');
+                                  }
+                                }}
+                              />
+                              <IconButton
+                                size="small"
+                                color="primary"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, phone: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, phone: editingValue });
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }}
+                                sx={{ verticalAlign: 'middle' }}
+                              >
+                                <CheckIcon fontSize="small" />
+                              </IconButton>
+                            </>
+                          ) : (
+                            <>
+                              {selectedUser?.phone}
+                              <IconButton
+                                className="edit-button"
+                                size="small"
+                                sx={{
+                                  position: 'absolute',
+                                  right: 0,
+                                  top: 0,
+                                  display: 'none',
+                                }}
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  setEditingField('phone');
+                                  setEditingValue(selectedUser?.phone || '');
+                                }}
+                                aria-label="Edit phone"
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </>
+                          )}
+                        </Typography>
+                      </Box>
+                      {/* Email */}
+                      <Box
+                        mt={1}
+                        sx={{
+                          cursor: 'pointer',
+                          position: 'relative',
+                          '&:hover .edit-button': { display: 'inline-flex' },
+                        }}
+                        onClick={() => {
+                          setEditingField('email');
+                          setEditingValue(selectedUser.email);
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                        >
+                          ✉️{' '}
+                          {editingField === 'email' ? (
+                            <>
+                              <TextField
+                                size="small"
+                                value={editingValue}
+                                onChange={e => setEditingValue(e.target.value)}
+                                sx={{ mr: 1, minWidth: 120 }}
+                                autoFocus
+                                onKeyDown={e => {
+                                  if (e.key === 'Enter') {
+                                    const updatedUsers = users.map(u =>
+                                      u.name === selectedUser.name ? { ...u, email: editingValue } : u
+                                    );
+                                    setUsers(updatedUsers);
+                                    setSelectedUser({ ...selectedUser, email: editingValue });
+                                    setEditingField(null);
+                                    setEditingValue('');
+                                  }
+                                }}
+                              />
+                              <IconButton
+                                size="small"
+                                color="primary"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, email: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, email: editingValue });
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }}
+                                sx={{ verticalAlign: 'middle' }}
+                              >
+                                <CheckIcon fontSize="small" />
+                              </IconButton>
+                            </>
+                          ) : (
+                            <>
+                              {selectedUser?.email}
+                              <IconButton
+                                className="edit-button"
+                                size="small"
+                                sx={{
+                                  position: 'absolute',
+                                  right: 0,
+                                  top: 0,
+                                  display: 'none',
+                                }}
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  setEditingField('email');
+                                  setEditingValue(selectedUser?.email || '');
+                                }}
+                                aria-label="Edit email"
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </>
+                          )}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  )}
+                  {tabIndex === 2 && (
+                    <Box>
+                      <Divider sx={{ mb: 1 }}>
+                        <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
+                          Security
+                        </Typography>
+                      </Divider>
+                      {/* Host */}
+                      <Box
+                        sx={{
+                          cursor: 'pointer',
+                          position: 'relative',
+                          '&:hover .edit-button': { display: 'inline-flex' },
+                          mt: 1,
+                        }}
+                        onClick={() => {
+                          setEditingField('host');
+                          setEditingValue(selectedUser.host);
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                        >
+                          <SupervisorAccountIcon sx={{ fontSize: 16, color: '#1976d2' }} />
+                          {editingField === 'host' ? (
+                            <>
+                              <TextField
+                                size="small"
+                                value={editingValue}
+                                onChange={e => setEditingValue(e.target.value)}
+                                sx={{ mr: 1, minWidth: 120 }}
+                                autoFocus
+                                onKeyDown={e => {
+                                  if (e.key === 'Enter') {
+                                    const updatedUsers = users.map(u =>
+                                      u.name === selectedUser.name ? { ...u, host: editingValue } : u
+                                    );
+                                    setUsers(updatedUsers);
+                                    setSelectedUser({ ...selectedUser, host: editingValue });
+                                    setEditingField(null);
+                                    setEditingValue('');
+                                  }
+                                }}
+                              />
+                              <IconButton
+                                size="small"
+                                color="primary"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, host: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, host: editingValue });
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }}
+                                sx={{ verticalAlign: 'middle' }}
+                              >
+                                <CheckIcon fontSize="small" />
+                              </IconButton>
+                            </>
+                          ) : (
+                            <>
+                              <a
+                                href="#"
+                                onClick={e => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  setHostDialogOpen(true);
+                                }}
+                                style={{ color: '#1976d2', textDecoration: 'none', cursor: 'pointer' }}
+                              >
+                                {selectedUser?.host}
+                              </a>
+                              <IconButton
+                                className="edit-button"
+                                size="small"
+                                sx={{
+                                  position: 'absolute',
+                                  right: 0,
+                                  top: 0,
+                                  display: 'none',
+                                }}
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  setEditingField('host');
+                                  setEditingValue(selectedUser?.host || '');
+                                }}
+                                aria-label="Edit host"
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </>
+                          )}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  )}
+                  {tabIndex === 3 && (
+                    <Box>
+                      <Divider sx={{ mb: 1 }}>
+                        <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
+                          Notes
+                        </Typography>
+                      </Divider>
+                      <Box
+                        mt={1}
+                        sx={{
+                          cursor: 'pointer',
+                          position: 'relative',
+                          '&:hover .edit-button': { display: 'inline-flex' },
+                        }}
+                        onClick={() => {
+                          setEditingField('notes');
+                          setEditingValue(selectedUser.notes);
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+                        >
+                          📝{' '}
+                          {editingField === 'notes' ? (
+                            <>
+                              <TextField
+                                size="small"
+                                value={editingValue}
+                                onChange={e => setEditingValue(e.target.value)}
+                                sx={{ mr: 1, minWidth: 120 }}
+                                autoFocus
+                                onKeyDown={e => {
+                                  if (e.key === 'Enter') {
+                                    const updatedUsers = users.map(u =>
+                                      u.name === selectedUser.name ? { ...u, notes: editingValue } : u
+                                    );
+                                    setUsers(updatedUsers);
+                                    setSelectedUser({ ...selectedUser, notes: editingValue });
+                                    setEditingField(null);
+                                    setEditingValue('');
+                                  }
+                                }}
+                              />
+                              <IconButton
+                                size="small"
+                                color="primary"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, notes: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, notes: editingValue });
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }}
+                                sx={{ verticalAlign: 'middle' }}
+                              >
+                                <CheckIcon fontSize="small" />
+                              </IconButton>
+                            </>
+                          ) : (
+                            <>
+                              {selectedUser?.notes}
+                              <IconButton
+                                className="edit-button"
+                                size="small"
+                                sx={{
+                                  position: 'absolute',
+                                  right: 0,
+                                  top: 0,
+                                  display: 'none',
+                                }}
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  setEditingField('notes');
+                                  setEditingValue(selectedUser?.notes || '');
+                                }}
+                                aria-label="Edit notes"
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </>
+                          )}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  )}
+                </Box>
+                {/* Save/Cancel Buttons */}
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      // For demo: just close the modal
+                      setSelectedUser(null);
+                      setInputValue('');
+                      setValue(null);
+                      setLastFourDigits('');
+                      setEditingField(null);
+                      setEditingValue('');
+                    }}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="inherit"
+                    onClick={() => {
+                      setSelectedUser(null);
+                      setInputValue('');
+                      setValue(null);
+                      setLastFourDigits('');
+                      setEditingField(null);
+                      setEditingValue('');
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+                {/* Print Pass Button aligned bottom-right */}
+                <Box sx={{ mt: 4, display: 'flex', justifyContent: 'flex-end' }}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      // For demo: show snackbar and close modal
                       setSelectedUser(null);
                       setSnackOpen(true);
                       setLastFourDigits('');
-                    }
-                  }}
-                >
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    Print
-                    <Chip
-                      label="⌘ + ⏎"
-                      size="small"
-                      color="default"
-                      component="div"
-                      clickable={false}
-                      tabIndex={-1}
-                      sx={{
-                        height: 20,
-                        fontSize: '0.75rem',
-                        pointerEvents: 'none',
-                        bgcolor: '#F1F2F4',
-                      }}
-                    />
-                  </Box>
-                </Button>
-              )}
-            </CardActions>
+                    }}
+                  >
+                    Print Pass
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
           </Card>
         </Box>
       </Modal>
