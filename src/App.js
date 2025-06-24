@@ -1,11 +1,30 @@
+// Country list for nationality selection with flags
+const countryList = [
+  { code: 'GB', label: 'United Kingdom' },
+  { code: 'US', label: 'United States' },
+  { code: 'FR', label: 'France' },
+  { code: 'DE', label: 'Germany' },
+  { code: 'IN', label: 'India' },
+  { code: 'CN', label: 'China' },
+  { code: 'JP', label: 'Japan' },
+  { code: 'AU', label: 'Australia' },
+  { code: 'BR', label: 'Brazil' },
+  { code: 'ZA', label: 'South Africa' },
+  // Add more as needed
+];
 import React, { useRef, useEffect, useState } from 'react';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+// import Autocomplete from '@mui/material/Autocomplete'; // Removed duplicate import; now only imported from grouped @mui/material import.
+import TextField from '@mui/material/TextField';
+import IconButton from '@mui/material/IconButton';
+import CheckIcon from '@mui/icons-material/Check';
 import {
   Autocomplete,
-  TextField,
   Avatar,
   ListItem,
   ListItemAvatar,
-  ListItemText,
   Box,
   Modal,
   Typography,
@@ -14,9 +33,7 @@ import {
   CardMedia,
   CardActions,
   Button,
-  MenuItem,
   Select,
-  IconButton,
   Menu,
   FormControl,
   InputLabel,
@@ -35,7 +52,6 @@ import {
   Tabs,
   Tab,
   ButtonGroup,
-  ListItemIcon,
   ListItemText as MuiListItemText,
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -61,7 +77,6 @@ import EmailIcon from '@mui/icons-material/Email';
 import Link from '@mui/material/Link';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVert from '@mui/icons-material/MoreVert';
-import CheckIcon from '@mui/icons-material/Check';
 import SecurityIcon from '@mui/icons-material/Security';
 import NoEncryptionIcon from '@mui/icons-material/NoEncryption';
 
@@ -953,15 +968,11 @@ export default function UserSearch() {
               <Grid item xs={12} md sx={{ p: 3, display: 'flex', flexDirection: 'column', minHeight: 420, position: 'relative' }}>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>
-                    {['Pass Details', 'Security', 'Notes'][tabIndex]}
+                    {['', 'Security', 'Notes'][tabIndex]}
                   </Typography>
                   {/* Section Content */}
                   {tabIndex === 0 && (
                     <Box>
-                      {/* PassID and Valid Date Range */}
-                      <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                        PassID: BEN-01-001
-                      </Typography>
                       {/* Valid Date Range */}
                       <MenuItem
                         sx={{ py: 1 }}
@@ -1313,6 +1324,126 @@ export default function UserSearch() {
                           />
                         )}
                       </MenuItem>
+                      {/* Nationality (with flag) */}
+                      <MenuItem
+                        sx={{ py: 1 }}
+                        onClick={() => {
+                          setEditingField('nationality');
+                          setEditingValue(selectedUser.nationality || 'United Kingdom');
+                        }}
+                      >
+                        <ListItemIcon>🌍</ListItemIcon>
+                        {editingField === 'nationality' ? (
+                          <>
+                            <Autocomplete
+                              options={countryList}
+                              getOptionLabel={(option) => option.label}
+                              value={countryList.find((c) => c.label === editingValue) || null}
+                              onChange={(_, newValue) => {
+                                if (newValue) {
+                                  setEditingValue(newValue.label);
+                                }
+                              }}
+                              renderOption={(props, option) => (
+                                <li {...props}>
+                                  <span className={`fi fi-${option.code.toLowerCase()}`} style={{ marginRight: 8 }} />
+                                  {option.label}
+                                </li>
+                              )}
+                              sx={{ minWidth: 200, mr: 1 }}
+                              renderInput={(params) => <TextField {...params} size="small" autoFocus />}
+                            />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, nationality: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, nationality: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <ListItemText
+                            primary="Nationality"
+                            secondary={selectedUser?.nationality || 'United Kingdom'}
+                          />
+                        )}
+                      </MenuItem>
+                      {/* Host Profile section */}
+                      <Box sx={{ width: '100%', mt: 3 }}>
+                        <Divider sx={{ mb: 1 }}>
+                          <Typography
+                            variant="subtitle2"
+                            color="text.secondary"
+                            sx={{ fontWeight: 'bold', letterSpacing: 1 }}
+                          >
+                            Host Profile
+                          </Typography>
+                        </Divider>
+                      </Box>
+                      {/* Host (editable) */}
+                      <MenuItem
+                        sx={{ py: 1 }}
+                        onClick={() => {
+                          setEditingField('host');
+                          setEditingValue(selectedUser.host || 'Unassigned');
+                        }}
+                      >
+                        <ListItemIcon>
+                          <PersonIcon fontSize="small" />
+                        </ListItemIcon>
+                        {editingField === 'host' ? (
+                          <>
+                            <TextField
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 140 }}
+                              autoFocus
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, host: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, host: editingValue });
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, host: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, host: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <ListItemText
+                            primary="Host"
+                            secondary={selectedUser?.host || 'Unassigned'}
+                          />
+                        )}
+                      </MenuItem>
                     </Box>
                   )}
                   {tabIndex === 1 && (
@@ -1322,97 +1453,7 @@ export default function UserSearch() {
                           Security
                         </Typography>
                       </Divider>
-                      {/* Host */}
-                      <Box
-                        sx={{
-                          cursor: 'pointer',
-                          position: 'relative',
-                          '&:hover .edit-button': { display: 'inline-flex' },
-                          mt: 1,
-                        }}
-                        onClick={() => {
-                          setEditingField('host');
-                          setEditingValue(selectedUser.host);
-                        }}
-                      >
-                        <Typography
-                          variant="body2"
-                          sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                        >
-                          <SupervisorAccountIcon sx={{ fontSize: 16, color: '#1976d2' }} />
-                          {editingField === 'host' ? (
-                            <>
-                              <TextField
-                                size="small"
-                                value={editingValue}
-                                onChange={e => setEditingValue(e.target.value)}
-                                sx={{ mr: 1, minWidth: 120 }}
-                                autoFocus
-                                onKeyDown={e => {
-                                  if (e.key === 'Enter') {
-                                    const updatedUsers = users.map(u =>
-                                      u.name === selectedUser.name ? { ...u, host: editingValue } : u
-                                    );
-                                    setUsers(updatedUsers);
-                                    setSelectedUser({ ...selectedUser, host: editingValue });
-                                    setEditingField(null);
-                                    setEditingValue('');
-                                  }
-                                }}
-                              />
-                              <IconButton
-                                size="small"
-                                color="primary"
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  const updatedUsers = users.map(u =>
-                                    u.name === selectedUser.name ? { ...u, host: editingValue } : u
-                                  );
-                                  setUsers(updatedUsers);
-                                  setSelectedUser({ ...selectedUser, host: editingValue });
-                                  setEditingField(null);
-                                  setEditingValue('');
-                                }}
-                                sx={{ verticalAlign: 'middle' }}
-                              >
-                                <CheckIcon fontSize="small" />
-                              </IconButton>
-                            </>
-                          ) : (
-                            <>
-                              <a
-                                href="#"
-                                onClick={e => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  setHostDialogOpen(true);
-                                }}
-                                style={{ color: '#1976d2', textDecoration: 'none', cursor: 'pointer' }}
-                              >
-                                {selectedUser?.host}
-                              </a>
-                              <IconButton
-                                className="edit-button"
-                                size="small"
-                                sx={{
-                                  position: 'absolute',
-                                  right: 0,
-                                  top: 0,
-                                  display: 'none',
-                                }}
-                                onClick={e => {
-                                  e.stopPropagation();
-                                  setEditingField('host');
-                                  setEditingValue(selectedUser?.host || '');
-                                }}
-                                aria-label="Edit host"
-                              >
-                                <EditIcon fontSize="small" />
-                              </IconButton>
-                            </>
-                          )}
-                        </Typography>
-                      </Box>
+                      {/* Host field removed from here (now editable in Pass Details tab) */}
                     </Box>
                   )}
                   {tabIndex === 2 && (
