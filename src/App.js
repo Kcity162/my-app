@@ -104,6 +104,9 @@ export default function UserSearch() {
 
   // Split‑button menu for Escorted status
   const [escMenuAnchor, setEscMenuAnchor] = useState(null);
+  const [printToastOpen, setPrintToastOpen] = useState(false); // Toast for "Print Pass"
+  const [printToastText, setPrintToastText] = useState(""); // Custom print toast message
+  const [printToastUser, setPrintToastUser] = useState(null);
   const handleEscMenuOpen = (event) => setEscMenuAnchor(event.currentTarget);
   const handleEscMenuClose = () => setEscMenuAnchor(null);
   const handleEscMenuSelect = (status) => {
@@ -115,7 +118,24 @@ export default function UserSearch() {
     setUsers(updatedUsers);
     setSelectedUser({ ...selectedUser, escorted: isEsc });
     handleEscMenuClose();
+    setPrintToastOpen(true); // Show toast when menu option selected
+    // Close the modal after setting escorted status and showing toast
+    handleClose();
   };
+
+  // Helper to close the main modal and reset fields
+  function handleClose() {
+    setSelectedUser(null);
+    setInputValue('');
+    setValue(null);
+    setLastFourDigits('');
+    setEditingField(null);
+    setEditingValue('');
+    if (inputRef.current) {
+      inputRef.current.value = '';
+      inputRef.current.blur();
+    }
+  }
 
   // Keyboard shortcut dialog state
   const [showShortcutTable, setShowShortcutTable] = useState(false);
@@ -1530,6 +1550,14 @@ export default function UserSearch() {
                         alignItems: 'center',
                         gap: 1,
                       }}
+                      onClick={() => {
+                        setPrintToastUser(selectedUser);
+                        handleClose();
+                        setPrintToastText(
+                          `Printing ${selectedUser?.escorted ? 'escorted' : 'un-escorted'} pass for ${selectedUser?.name}`
+                        );
+                        setPrintToastOpen(true);
+                      }}
                     >
                       <PrintIcon sx={{ mr: 1 }} />
                       {(selectedUser?.escorted ? 'Escorted Pass' : 'Un-escorted Pass').toUpperCase()}
@@ -1695,6 +1723,43 @@ export default function UserSearch() {
         <MuiAlert onClose={() => setSnackOpen(false)} severity="info" sx={{ width: '100%' }}>
           {messageText ? `Email sent to ${selectedUser?.host}` : "Printing Pass"}
         </MuiAlert>
+      </Snackbar>
+      {/* Print Pass Toast Snackbar (bottom center, autoHide) */}
+      {/* Print Pass Toast Snackbar (bottom center, autoHide) */}
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        open={printToastOpen}
+        autoHideDuration={3000}
+        onClose={() => setPrintToastOpen(false)}
+      >
+        {/* Custom SnackbarContent with avatar and message */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            bgcolor: '#e6f4ea',
+            px: 2,
+            py: 1,
+            borderRadius: 1,
+            boxShadow: 1,
+            minWidth: 300,
+          }}
+        >
+          <Avatar
+            src={printToastUser?.avatar}
+            alt={printToastUser?.name}
+            sx={{ width: 32, height: 32 }}
+          />
+          <Box>
+            <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+              {printToastText ||
+                (printToastUser
+                  ? `Printing ${printToastUser.escorted ? 'escorted' : 'un-escorted'} pass for ${printToastUser.name}`
+                  : 'Printing pass')}
+            </Typography>
+          </Box>
+        </Box>
       </Snackbar>
 
       {/* ➕ Floating Action Button for New Pass */}
