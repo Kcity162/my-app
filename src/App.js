@@ -658,7 +658,7 @@ export default function UserSearch() {
                     if (currentLetter !== lastLetter) {
                       groupedRows.push(
                         <TableRow key={`divider-${currentLetter}`}>
-                          <TableCell colSpan={7} sx={{ backgroundColor: '#f0f0f0', fontWeight: 'bold' }}>
+                          <TableCell colSpan={7} sx={{ backgroundColor: '#f9f9f9', fontWeight: 'bold', color: '#999' }}>
                             {currentLetter}
                           </TableCell>
                         </TableRow>
