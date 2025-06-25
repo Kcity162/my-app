@@ -915,7 +915,7 @@ export default function UserSearch() {
                   }}
                 >
                   <Tab
-                    label="Pass Details"
+                    label="Pass Information"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -931,7 +931,7 @@ export default function UserSearch() {
                     }}
                   />
                   <Tab
-                    label="Security"
+                    label="Security Clearance"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -968,7 +968,7 @@ export default function UserSearch() {
               <Grid item xs={12} md sx={{ p: 3, display: 'flex', flexDirection: 'column', minHeight: 420, position: 'relative' }}>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>
-                    {['', 'Security', 'Notes'][tabIndex]}
+                    {['', 'Security Clearance', 'Notes'][tabIndex]}
                   </Typography>
                   {/* Section Content */}
                   {tabIndex === 0 && (
@@ -1022,7 +1022,7 @@ export default function UserSearch() {
                           </>
                         ) : (
                           <MuiListItemText
-                            primary="Valid Date"
+                            primary="Date"
                             secondary={selectedUser?.validDate || '24 June – 30 June'}
                           />
                         )}
@@ -1073,6 +1073,59 @@ export default function UserSearch() {
                           <MuiListItemText
                             primary="Purpose"
                             secondary={selectedUser?.purpose || 'Social'}
+                          />
+                        )}
+                      </MenuItem>
+                      {/* Area Needing Access To */}
+                      <MenuItem
+                        sx={{ py: 1 }}
+                        onClick={() => {
+                          setEditingField('accessArea');
+                          setEditingValue(selectedUser.accessArea || 'Technical Side');
+                        }}
+                      >
+                        <ListItemIcon>🛠️</ListItemIcon>
+                        {editingField === 'accessArea' ? (
+                          <>
+                            <TextField
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 180 }}
+                              autoFocus
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, accessArea: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, accessArea: editingValue });
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, accessArea: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, accessArea: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <MuiListItemText
+                            primary="Area"
+                            secondary={selectedUser?.accessArea || 'Technical Side'}
                           />
                         )}
                       </MenuItem>
