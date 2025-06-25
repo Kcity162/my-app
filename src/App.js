@@ -1709,26 +1709,44 @@ export default function UserSearch() {
                   {tabIndex === 2 && (
                     <Box>
                       {/* Host Profile Tab Content */}
-                      <Divider sx={{ mb: 1 }}>
-                        <Typography
-                          variant="subtitle2"
-                          color="text.secondary"
-                          sx={{ fontWeight: 'bold', letterSpacing: 1 }}
-                        >
-                          Host Profile
-                        </Typography>
-                      </Divider>
                       {hostDetails && (
                         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                            <Avatar src={hostDetails.avatar} alt={hostDetails.name} sx={{ width: 64, height: 64 }} />
-                            <Box>
-                              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{hostDetails.name}</Typography>
-                              <Typography variant="body2">{hostDetails.company}</Typography>
-                            </Box>
-                          </Box>
-                          <Typography variant="body2">📞 {hostDetails.phone}</Typography>
-                          <Typography variant="body2">✉️ {hostDetails.email}</Typography>
+                          {/* Host avatar and name */}
+                          <MenuItem sx={{ py: 1.5 }}>
+                            <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
+                              <Avatar src={hostDetails.avatar} alt={hostDetails.name} sx={{ width: 40, height: 40 }}>
+                                {getInitials(hostDetails.name)}
+                              </Avatar>
+                            </ListItemIcon>
+                            <MuiListItemText
+                              primary={
+                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                  {hostDetails.name}
+                                </Typography>
+                              }
+                              secondary={hostDetails.company}
+                            />
+                          </MenuItem>
+                          {/* Host phone */}
+                          <MenuItem sx={{ py: 1.5 }}>
+                            <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
+                              <PhoneIcon fontSize="small" />
+                            </ListItemIcon>
+                            <MuiListItemText
+                              primary="Phone"
+                              secondary={hostDetails.phone}
+                            />
+                          </MenuItem>
+                          {/* Host email */}
+                          <MenuItem sx={{ py: 1.5 }}>
+                            <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
+                              <EmailIcon fontSize="small" />
+                            </ListItemIcon>
+                            <MuiListItemText
+                              primary="Email"
+                              secondary={hostDetails.email}
+                            />
+                          </MenuItem>
                         </Box>
                       )}
                     </Box>
