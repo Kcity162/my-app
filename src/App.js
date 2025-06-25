@@ -42,6 +42,8 @@ import {
   ListItemText as MuiListItemText,
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -126,6 +128,23 @@ export default function UserSearch() {
   const [viewMode, setViewMode] = useState('list');
   // Tab index for visitor modal
   const [tabIndex, setTabIndex] = useState(0);
+
+  // State for current date in filter section
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Visitor filter menu state and label map
+  const [anchorEl, setAnchorEl] = useState(null);
+  const map = {
+    today: "Today",
+    tomorrow: "Tomorrow",
+    next7: "Next 7 Days",
+    future: "Next Month",
+    past: "Past",
+  };
+  const handleFilterChange = (value) => {
+    setVisitorFilter(value);
+    setAnchorEl(null);
+  };
 
   // Split‑button menu for Escorted status
   const [escMenuAnchor, setEscMenuAnchor] = useState(null);
@@ -531,34 +550,61 @@ export default function UserSearch() {
             px: 0,
           }}
         >
-          <FormControl sx={{ minWidth: 200 }} size="small">
-            <Select
-              id="visitor-filter"
-              value={visitorFilter}
-              onChange={(e) => setVisitorFilter(e.target.value)}
-              displayEmpty
-              renderValue={(selected) => {
-                const map = {
-                  today: 'Today',
-                  next7: 'Week',
-                  future: 'Month or more',
-                  past: 'Past',
-                };
-                return (
-                  <>
-                    <FilterListIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-                    {map[selected] || 'Filter'}
-                  </>
-                );
-              }}
+          <Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <ButtonGroup variant="outlined">
+                <Button
+                  onClick={() => {
+                    handleFilterChange('today');
+                    setCurrentDate(new Date());
+                  }}
+                  sx={{ textTransform: 'none' }}
+                >
+                  Today's Visitors
+                </Button>
+                <Button
+                  size="small"
+                  onClick={(e) => setAnchorEl(e.currentTarget)}
+                >
+                  <ArrowDropDownIcon />
+                </Button>
+              </ButtonGroup>
+              <IconButton
+                aria-label="Previous day"
+                onClick={() =>
+                  setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() - 1))
+                }
+              >
+                <ChevronLeftIcon />
+              </IconButton>
+              <Typography variant="body2" sx={{ minWidth: 140, textAlign: 'center', px: 1 }}>
+                {currentDate.toLocaleDateString('en-GB', {
+                  weekday: 'long',
+                  day: 'numeric',
+                  month: 'long',
+                })}
+              </Typography>
+              <IconButton
+                aria-label="Next day"
+                onClick={() =>
+                  setCurrentDate((prev) => new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() + 1))
+                }
+              >
+                <ChevronRightIcon />
+              </IconButton>
+            </Box>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(null)}
             >
-              <MenuItem value="today">Today (T)</MenuItem>
-              <MenuItem value="next7">Week (W)</MenuItem>
-              <MenuItem value="future">Month or more (M)</MenuItem>
+              <MenuItem onClick={() => handleFilterChange('tomorrow')}>Tomorrow</MenuItem>
+              <MenuItem onClick={() => handleFilterChange('next7')}>Next 7 Days</MenuItem>
+              <MenuItem onClick={() => handleFilterChange('future')}>Next Month</MenuItem>
               <Divider />
-              <MenuItem value="past">Past (P)</MenuItem>
-            </Select>
-          </FormControl>
+              <MenuItem onClick={() => handleFilterChange('past')}>Past</MenuItem>
+            </Menu>
+          </Box>
           {/* Toggle buttons with tooltips for view mode shortcuts */}
           <ToggleButtonGroup
             value={viewMode}
