@@ -1074,13 +1074,13 @@ export default function UserSearch() {
                       {/* Pass Information Section (Order: Date, Area, Purpose, Details, Divider, Visitor, Number of children, Divider, Vehicle Registration) */}
                       {/* Date */}
                       <MenuItem
-                        sx={{ py: 1 }}
+                        sx={{ py: 1.5 }}
                         onClick={() => {
                           setEditingField('validDate');
                           setEditingValue(selectedUser.validDate || '24 June – 30 June');
                         }}
                       >
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
                           <CalendarTodayIcon />
                         </ListItemIcon>
                         {editingField === 'validDate' ? (
@@ -1130,13 +1130,13 @@ export default function UserSearch() {
                       </MenuItem>
                       {/* Area */}
                       <MenuItem
-                        sx={{ py: 1 }}
+                        sx={{ py: 1.5 }}
                         onClick={() => {
                           setEditingField('accessArea');
                           setEditingValue(selectedUser.accessArea || 'Technical Side');
                         }}
                       >
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
                           <MapIcon />
                         </ListItemIcon>
                         {editingField === 'accessArea' ? (
@@ -1185,13 +1185,13 @@ export default function UserSearch() {
                       </MenuItem>
                       {/* Purpose */}
                       <MenuItem
-                        sx={{ py: 1 }}
+                        sx={{ py: 1.5 }}
                         onClick={() => {
                           setEditingField('purpose');
                           setEditingValue(selectedUser.purpose || 'Social');
                         }}
                       >
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
                           <InfoIcon />
                         </ListItemIcon>
                         {editingField === 'purpose' ? (
@@ -1236,13 +1236,13 @@ export default function UserSearch() {
                       </MenuItem>
                       {/* Details */}
                       <MenuItem
-                        sx={{ py: 1 }}
+                        sx={{ py: 1.5 }}
                         onClick={() => {
                           setEditingField('details');
                           setEditingValue(selectedUser.details || 'Family visiting for birthday');
                         }}
                       >
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
                           <TextSnippetIcon />
                         </ListItemIcon>
                         {editingField === 'details' ? (
@@ -1291,7 +1291,7 @@ export default function UserSearch() {
                       </MenuItem>
                       {/* Children - moved up to just after Details */}
                       <MenuItem
-                        sx={{ py: 1 }}
+                        sx={{ py: 1.5 }}
                         onClick={() => {
                           setEditingField('numChildren');
                           setEditingValue(
@@ -1301,7 +1301,7 @@ export default function UserSearch() {
                           );
                         }}
                       >
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
                           <ChildCareIcon />
                         </ListItemIcon>
                         {editingField === 'numChildren' ? (
@@ -1411,13 +1411,13 @@ export default function UserSearch() {
                     <Box>
                       {/* Name */}
                       <MenuItem
-                        sx={{ py: 1 }}
+                        sx={{ py: 1.5 }}
                         onClick={() => {
                           setEditingField('name');
                           setEditingValue(selectedUser.name);
                         }}
                       >
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
                           <PersonIcon fontSize="small" />
                         </ListItemIcon>
                         {editingField === 'name' ? (
@@ -1483,13 +1483,13 @@ export default function UserSearch() {
                       </MenuItem>
                       {/* Company */}
                       <MenuItem
-                        sx={{ py: 1 }}
+                        sx={{ py: 1.5 }}
                         onClick={() => {
                           setEditingField('company');
                           setEditingValue(selectedUser.company);
                         }}
                       >
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
                           <BusinessIcon fontSize="small" />
                         </ListItemIcon>
                         {editingField === 'company' ? (
@@ -1539,13 +1539,13 @@ export default function UserSearch() {
                       </MenuItem>
                       {/* Phone */}
                       <MenuItem
-                        sx={{ py: 1 }}
+                        sx={{ py: 1.5 }}
                         onClick={() => {
                           setEditingField('phone');
                           setEditingValue(selectedUser.phone);
                         }}
                       >
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
                           <PhoneIcon fontSize="small" />
                         </ListItemIcon>
                         {editingField === 'phone' ? (
@@ -1595,13 +1595,13 @@ export default function UserSearch() {
                       </MenuItem>
                       {/* Email */}
                       <MenuItem
-                        sx={{ py: 1 }}
+                        sx={{ py: 1.5 }}
                         onClick={() => {
                           setEditingField('email');
                           setEditingValue(selectedUser.email);
                         }}
                       >
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
                           <EmailIcon fontSize="small" />
                         </ListItemIcon>
                         {editingField === 'email' ? (
@@ -1651,13 +1651,13 @@ export default function UserSearch() {
                       </MenuItem>
                       {/* Nationality (with flag) */}
                       <MenuItem
-                        sx={{ py: 1 }}
+                        sx={{ py: 1.5 }}
                         onClick={() => {
                           setEditingField('nationality');
                           setEditingValue(selectedUser.nationality || 'United Kingdom');
                         }}
                       >
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
                           <PublicIcon sx={{ fontSize: 40 }} />
                         </ListItemIcon>
                         {editingField === 'nationality' ? (
