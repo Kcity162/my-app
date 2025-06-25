@@ -964,7 +964,7 @@ export default function UserSearch() {
                     }}
                   />
                   <Tab
-                    label="Notes"
+                    label="Host Profile"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -979,13 +979,52 @@ export default function UserSearch() {
                       textAlign: 'left',
                     }}
                   />
+                  <Tab
+                    label="Vehicles"
+                    sx={{
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-start',
+                      textTransform: 'none',
+                      fontWeight: tabIndex === 4 ? 'bold' : 'normal',
+                      borderRadius: 2,
+                      px: 2,
+                      py: 1.5,
+                      mb: 0.5,
+                      backgroundColor: tabIndex === 4 ? 'primary.100' : 'inherit',
+                      minHeight: 48,
+                      textAlign: 'left',
+                    }}
+                  />
+                  <Tab
+                    label="Notes"
+                    sx={{
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-start',
+                      textTransform: 'none',
+                      fontWeight: tabIndex === 5 ? 'bold' : 'normal',
+                      borderRadius: 2,
+                      px: 2,
+                      py: 1.5,
+                      mb: 0.5,
+                      backgroundColor: tabIndex === 5 ? 'primary.100' : 'inherit',
+                      minHeight: 48,
+                      textAlign: 'left',
+                    }}
+                  />
                 </Tabs>
               </Grid>
               {/* Right column */}
               <Grid item xs={12} md sx={{ p: 3, display: 'flex', flexDirection: 'column', minHeight: 420, position: 'relative' }}>
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>
-                    {['Visitor Profile', 'Pass Information', 'Security Clearance', 'Notes'][tabIndex]}
+                    {[
+                      'Visitor Profile',
+                      'Pass Information',
+                      'Security Clearance',
+                      'Host Profile',
+                      'Vehicles',
+                      'Notes'
+                    ][tabIndex]}
                   </Typography>
                   {/* Section Content */}
                   {tabIndex === 0 && (
@@ -1523,6 +1562,53 @@ export default function UserSearch() {
                     </Box>
                   )}
                   {tabIndex === 3 && (
+                    <Box>
+                      {/* Host Profile Tab Content */}
+                      <Divider sx={{ mb: 1 }}>
+                        <Typography
+                          variant="subtitle2"
+                          color="text.secondary"
+                          sx={{ fontWeight: 'bold', letterSpacing: 1 }}
+                        >
+                          Host Profile
+                        </Typography>
+                      </Divider>
+                      {hostDetails && (
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                            <Avatar src={hostDetails.avatar} alt={hostDetails.name} sx={{ width: 64, height: 64 }} />
+                            <Box>
+                              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{hostDetails.name}</Typography>
+                              <Typography variant="body2">{hostDetails.company}</Typography>
+                            </Box>
+                          </Box>
+                          <Typography variant="body2">📞 {hostDetails.phone}</Typography>
+                          <Typography variant="body2">✉️ {hostDetails.email}</Typography>
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                  {tabIndex === 4 && (
+                    <Box>
+                      {/* Vehicles Tab Content */}
+                      <Divider sx={{ mb: 1 }}>
+                        <Typography
+                          variant="subtitle2"
+                          color="text.secondary"
+                          sx={{ fontWeight: 'bold', letterSpacing: 1 }}
+                        >
+                          Vehicles
+                        </Typography>
+                      </Divider>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        <Typography variant="body2">
+                          <strong>Vehicle Registration:</strong> {selectedUser?.vehicleReg || 'None'}
+                        </Typography>
+                        {/* Add more vehicle-related info here if available */}
+                      </Box>
+                    </Box>
+                  )}
+                  {tabIndex === 5 && (
                     <Box
                       sx={{
                         flex: 1,
