@@ -916,7 +916,7 @@ export default function UserSearch() {
                   }}
                 >
                   <Tab
-                    label="Visitor Profile"
+                    label="Pass Information"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -932,7 +932,7 @@ export default function UserSearch() {
                     }}
                   />
                   <Tab
-                    label="Pass Information"
+                    label="Visitor Profile"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -948,7 +948,7 @@ export default function UserSearch() {
                     }}
                   />
                   <Tab
-                    label="Security Clearance"
+                    label="Host Profile"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -964,7 +964,7 @@ export default function UserSearch() {
                     }}
                   />
                   <Tab
-                    label="Host Profile"
+                    label="Security"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -1018,16 +1018,243 @@ export default function UserSearch() {
                 <Box sx={{ flex: 1 }}>
                   <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 2 }}>
                     {[
-                      'Visitor Profile',
                       'Pass Information',
-                      'Security Clearance',
+                      'Visitor Profile',
                       'Host Profile',
+                      'Security',
                       'Vehicles',
                       'Notes'
                     ][tabIndex]}
                   </Typography>
                   {/* Section Content */}
                   {tabIndex === 0 && (
+                    <Box>
+                      {/* Valid Date Range */}
+                      <MenuItem
+                        sx={{ py: 1 }}
+                        onClick={() => {
+                          setEditingField('validDate');
+                          setEditingValue(selectedUser.validDate || '24 June – 30 June');
+                        }}
+                      >
+                        <ListItemIcon>📅</ListItemIcon>
+                        {editingField === 'validDate' ? (
+                          <>
+                            <TextField
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 180 }}
+                              autoFocus
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, validDate: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, validDate: editingValue });
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, validDate: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, validDate: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                              sx={{ verticalAlign: 'middle' }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <MuiListItemText
+                            primary="Date"
+                            secondary={selectedUser?.validDate || '24 June – 30 June'}
+                          />
+                        )}
+                      </MenuItem>
+                      {/* Visit Purpose Dropdown */}
+                      <MenuItem
+                        sx={{ py: 1 }}
+                        onClick={() => {
+                          setEditingField('purpose');
+                          setEditingValue(selectedUser.purpose || 'Social');
+                        }}
+                      >
+                        <ListItemIcon>🎯</ListItemIcon>
+                        {editingField === 'purpose' ? (
+                          <>
+                            <Select
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 140 }}
+                              autoFocus
+                            >
+                              {['Social', 'Work', 'Delivery', 'Contractor', 'Other'].map(option => (
+                                <MenuItem key={option} value={option}>
+                                  {option}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, purpose: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, purpose: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                              sx={{ verticalAlign: 'middle' }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <MuiListItemText
+                            primary="Purpose"
+                            secondary={selectedUser?.purpose || 'Social'}
+                          />
+                        )}
+                      </MenuItem>
+                      {/* Area Needing Access To */}
+                      <MenuItem
+                        sx={{ py: 1 }}
+                        onClick={() => {
+                          setEditingField('accessArea');
+                          setEditingValue(selectedUser.accessArea || 'Technical Side');
+                        }}
+                      >
+                        <ListItemIcon>🛠️</ListItemIcon>
+                        {editingField === 'accessArea' ? (
+                          <>
+                            <TextField
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 180 }}
+                              autoFocus
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, accessArea: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, accessArea: editingValue });
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, accessArea: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, accessArea: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <MuiListItemText
+                            primary="Area"
+                            secondary={selectedUser?.accessArea || 'Technical Side'}
+                          />
+                        )}
+                      </MenuItem>
+                      {/* Host Profile section */}
+                      <Box sx={{ width: '100%', mt: 3 }}>
+                        <Divider sx={{ mb: 1 }}>
+                          <Typography
+                            variant="subtitle2"
+                            color="text.secondary"
+                            sx={{ fontWeight: 'bold', letterSpacing: 1 }}
+                          >
+                            Host Profile
+                          </Typography>
+                        </Divider>
+                      </Box>
+                      {/* Host (editable) */}
+                      <MenuItem
+                        sx={{ py: 1 }}
+                        onClick={() => {
+                          setEditingField('host');
+                          setEditingValue(selectedUser.host || 'Unassigned');
+                        }}
+                      >
+                        <ListItemIcon>
+                          <PersonIcon fontSize="small" />
+                        </ListItemIcon>
+                        {editingField === 'host' ? (
+                          <>
+                            <TextField
+                              size="small"
+                              value={editingValue}
+                              onChange={e => setEditingValue(e.target.value)}
+                              sx={{ mr: 1, minWidth: 140 }}
+                              autoFocus
+                              onKeyDown={e => {
+                                if (e.key === 'Enter') {
+                                  const updatedUsers = users.map(u =>
+                                    u.name === selectedUser.name ? { ...u, host: editingValue } : u
+                                  );
+                                  setUsers(updatedUsers);
+                                  setSelectedUser({ ...selectedUser, host: editingValue });
+                                  setEditingField(null);
+                                  setEditingValue('');
+                                }
+                              }}
+                            />
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              onClick={e => {
+                                e.stopPropagation();
+                                const updatedUsers = users.map(u =>
+                                  u.name === selectedUser.name ? { ...u, host: editingValue } : u
+                                );
+                                setUsers(updatedUsers);
+                                setSelectedUser({ ...selectedUser, host: editingValue });
+                                setEditingField(null);
+                                setEditingValue('');
+                              }}
+                            >
+                              <CheckIcon fontSize="small" />
+                            </IconButton>
+                          </>
+                        ) : (
+                          <ListItemText
+                            primary="Host"
+                            secondary={selectedUser?.host || 'Unassigned'}
+                          />
+                        )}
+                      </MenuItem>
+                    </Box>
+                  )}
+                  {tabIndex === 1 && (
                     <Box>
                       {/* Name */}
                       <MenuItem
@@ -1324,244 +1551,7 @@ export default function UserSearch() {
                       </MenuItem>
                     </Box>
                   )}
-                  {tabIndex === 1 && (
-                    <Box>
-                      {/* Valid Date Range */}
-                      <MenuItem
-                        sx={{ py: 1 }}
-                        onClick={() => {
-                          setEditingField('validDate');
-                          setEditingValue(selectedUser.validDate || '24 June – 30 June');
-                        }}
-                      >
-                        <ListItemIcon>📅</ListItemIcon>
-                        {editingField === 'validDate' ? (
-                          <>
-                            <TextField
-                              size="small"
-                              value={editingValue}
-                              onChange={e => setEditingValue(e.target.value)}
-                              sx={{ mr: 1, minWidth: 180 }}
-                              autoFocus
-                              onKeyDown={e => {
-                                if (e.key === 'Enter') {
-                                  const updatedUsers = users.map(u =>
-                                    u.name === selectedUser.name ? { ...u, validDate: editingValue } : u
-                                  );
-                                  setUsers(updatedUsers);
-                                  setSelectedUser({ ...selectedUser, validDate: editingValue });
-                                  setEditingField(null);
-                                  setEditingValue('');
-                                }
-                              }}
-                            />
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              onClick={e => {
-                                e.stopPropagation();
-                                const updatedUsers = users.map(u =>
-                                  u.name === selectedUser.name ? { ...u, validDate: editingValue } : u
-                                );
-                                setUsers(updatedUsers);
-                                setSelectedUser({ ...selectedUser, validDate: editingValue });
-                                setEditingField(null);
-                                setEditingValue('');
-                              }}
-                              sx={{ verticalAlign: 'middle' }}
-                            >
-                              <CheckIcon fontSize="small" />
-                            </IconButton>
-                          </>
-                        ) : (
-                          <MuiListItemText
-                            primary="Date"
-                            secondary={selectedUser?.validDate || '24 June – 30 June'}
-                          />
-                        )}
-                      </MenuItem>
-                      {/* Visit Purpose Dropdown */}
-                      <MenuItem
-                        sx={{ py: 1 }}
-                        onClick={() => {
-                          setEditingField('purpose');
-                          setEditingValue(selectedUser.purpose || 'Social');
-                        }}
-                      >
-                        <ListItemIcon>🎯</ListItemIcon>
-                        {editingField === 'purpose' ? (
-                          <>
-                            <Select
-                              size="small"
-                              value={editingValue}
-                              onChange={e => setEditingValue(e.target.value)}
-                              sx={{ mr: 1, minWidth: 140 }}
-                              autoFocus
-                            >
-                              {['Social', 'Work', 'Delivery', 'Contractor', 'Other'].map(option => (
-                                <MenuItem key={option} value={option}>
-                                  {option}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              onClick={e => {
-                                e.stopPropagation();
-                                const updatedUsers = users.map(u =>
-                                  u.name === selectedUser.name ? { ...u, purpose: editingValue } : u
-                                );
-                                setUsers(updatedUsers);
-                                setSelectedUser({ ...selectedUser, purpose: editingValue });
-                                setEditingField(null);
-                                setEditingValue('');
-                              }}
-                              sx={{ verticalAlign: 'middle' }}
-                            >
-                              <CheckIcon fontSize="small" />
-                            </IconButton>
-                          </>
-                        ) : (
-                          <MuiListItemText
-                            primary="Purpose"
-                            secondary={selectedUser?.purpose || 'Social'}
-                          />
-                        )}
-                      </MenuItem>
-                      {/* Area Needing Access To */}
-                      <MenuItem
-                        sx={{ py: 1 }}
-                        onClick={() => {
-                          setEditingField('accessArea');
-                          setEditingValue(selectedUser.accessArea || 'Technical Side');
-                        }}
-                      >
-                        <ListItemIcon>🛠️</ListItemIcon>
-                        {editingField === 'accessArea' ? (
-                          <>
-                            <TextField
-                              size="small"
-                              value={editingValue}
-                              onChange={e => setEditingValue(e.target.value)}
-                              sx={{ mr: 1, minWidth: 180 }}
-                              autoFocus
-                              onKeyDown={e => {
-                                if (e.key === 'Enter') {
-                                  const updatedUsers = users.map(u =>
-                                    u.name === selectedUser.name ? { ...u, accessArea: editingValue } : u
-                                  );
-                                  setUsers(updatedUsers);
-                                  setSelectedUser({ ...selectedUser, accessArea: editingValue });
-                                  setEditingField(null);
-                                  setEditingValue('');
-                                }
-                              }}
-                            />
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              onClick={e => {
-                                e.stopPropagation();
-                                const updatedUsers = users.map(u =>
-                                  u.name === selectedUser.name ? { ...u, accessArea: editingValue } : u
-                                );
-                                setUsers(updatedUsers);
-                                setSelectedUser({ ...selectedUser, accessArea: editingValue });
-                                setEditingField(null);
-                                setEditingValue('');
-                              }}
-                            >
-                              <CheckIcon fontSize="small" />
-                            </IconButton>
-                          </>
-                        ) : (
-                          <MuiListItemText
-                            primary="Area"
-                            secondary={selectedUser?.accessArea || 'Technical Side'}
-                          />
-                        )}
-                      </MenuItem>
-                      {/* Host Profile section */}
-                      <Box sx={{ width: '100%', mt: 3 }}>
-                        <Divider sx={{ mb: 1 }}>
-                          <Typography
-                            variant="subtitle2"
-                            color="text.secondary"
-                            sx={{ fontWeight: 'bold', letterSpacing: 1 }}
-                          >
-                            Host Profile
-                          </Typography>
-                        </Divider>
-                      </Box>
-                      {/* Host (editable) */}
-                      <MenuItem
-                        sx={{ py: 1 }}
-                        onClick={() => {
-                          setEditingField('host');
-                          setEditingValue(selectedUser.host || 'Unassigned');
-                        }}
-                      >
-                        <ListItemIcon>
-                          <PersonIcon fontSize="small" />
-                        </ListItemIcon>
-                        {editingField === 'host' ? (
-                          <>
-                            <TextField
-                              size="small"
-                              value={editingValue}
-                              onChange={e => setEditingValue(e.target.value)}
-                              sx={{ mr: 1, minWidth: 140 }}
-                              autoFocus
-                              onKeyDown={e => {
-                                if (e.key === 'Enter') {
-                                  const updatedUsers = users.map(u =>
-                                    u.name === selectedUser.name ? { ...u, host: editingValue } : u
-                                  );
-                                  setUsers(updatedUsers);
-                                  setSelectedUser({ ...selectedUser, host: editingValue });
-                                  setEditingField(null);
-                                  setEditingValue('');
-                                }
-                              }}
-                            />
-                            <IconButton
-                              size="small"
-                              color="primary"
-                              onClick={e => {
-                                e.stopPropagation();
-                                const updatedUsers = users.map(u =>
-                                  u.name === selectedUser.name ? { ...u, host: editingValue } : u
-                                );
-                                setUsers(updatedUsers);
-                                setSelectedUser({ ...selectedUser, host: editingValue });
-                                setEditingField(null);
-                                setEditingValue('');
-                              }}
-                            >
-                              <CheckIcon fontSize="small" />
-                            </IconButton>
-                          </>
-                        ) : (
-                          <ListItemText
-                            primary="Host"
-                            secondary={selectedUser?.host || 'Unassigned'}
-                          />
-                        )}
-                      </MenuItem>
-                    </Box>
-                  )}
                   {tabIndex === 2 && (
-                    <Box>
-                      <Divider sx={{ mb: 1 }}>
-                        <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
-                          Security
-                        </Typography>
-                      </Divider>
-                      {/* Host field removed from here (now editable in Pass Details tab) */}
-                    </Box>
-                  )}
-                  {tabIndex === 3 && (
                     <Box>
                       {/* Host Profile Tab Content */}
                       <Divider sx={{ mb: 1 }}>
@@ -1586,6 +1576,16 @@ export default function UserSearch() {
                           <Typography variant="body2">✉️ {hostDetails.email}</Typography>
                         </Box>
                       )}
+                    </Box>
+                  )}
+                  {tabIndex === 3 && (
+                    <Box>
+                      <Divider sx={{ mb: 1 }}>
+                        <Typography variant="subtitle2" color="text.secondary" sx={{ fontWeight: 'bold', letterSpacing: 1 }}>
+                          Security
+                        </Typography>
+                      </Divider>
+                      {/* Host field removed from here (now editable in Pass Details tab) */}
                     </Box>
                   )}
                   {tabIndex === 4 && (
