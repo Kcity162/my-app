@@ -1369,10 +1369,12 @@ export default function UserSearch() {
                         role="button"
                         aria-label="Go to Visitor Profile"
                       >
-                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
-                          <PersonIcon />
-                        </ListItemIcon>
-                        <Avatar src={selectedUser?.avatar} sx={{ width: 36, height: 36, mr: 2, display: 'none' }} />
+                        <Avatar
+                          src={selectedUser?.avatar}
+                          sx={{ width: 36, height: 36, mr: 2 }}
+                        >
+                          {getInitials(selectedUser?.name)}
+                        </Avatar>
                         <Box>
                           <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                             Visitor
@@ -1389,9 +1391,6 @@ export default function UserSearch() {
                         role="button"
                         aria-label="Go to Host Profile"
                       >
-                        <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>
-                          <SupervisorAccountIcon />
-                        </ListItemIcon>
                         <Avatar
                           src={hostDetails?.avatar}
                           sx={{ width: 36, height: 36, mr: 2 }}
