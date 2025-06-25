@@ -448,7 +448,7 @@ export default function UserSearch() {
                         <span>{option.name}</span>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                           <Chip
-                            label={option.escorted ? 'Escorted' : 'Un-escorted'}
+                            label={option.escorted ? 'Escorted' : 'Unescorted'}
                             size="small"
                             sx={{
                               bgcolor: option.escorted ? '#f8d7da' : '#d4edda',
@@ -677,17 +677,35 @@ export default function UserSearch() {
                       >
                         <TableCell sx={{ padding: 1, pl: 2 }}>
                           <Box
-                            sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 1,
+                              cursor: 'pointer',
+                              justifyContent: 'space-between',
+                              width: '100%',
+                            }}
                             onClick={() => setSelectedUser(user)}
                           >
-                            <Avatar src={user.avatar} sx={{ width: 50, height: 50 }} />
-                            <Typography
-                              variant="h6"
-                              sx={{ fontWeight: 'bold', color: 'primary.main', textDecoration: 'none' }}
-                              component="span"
-                            >
-                              {user.name}
-                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                              <Avatar src={user.avatar} sx={{ width: 50, height: 50 }} />
+                              <Typography
+                                variant="h6"
+                                sx={{ fontWeight: 'bold', color: 'primary.main', textDecoration: 'none' }}
+                                component="span"
+                              >
+                                {user.name}
+                              </Typography>
+                            </Box>
+                            <Chip
+                              label={user.escorted ? 'Escorted' : 'Unescorted'}
+                              size="small"
+                              sx={{
+                                bgcolor: user.escorted ? '#f8d7da' : '#d4edda',
+                                color: user.escorted ? '#721c24' : '#155724',
+                                ml: 1,
+                              }}
+                            />
                           </Box>
                         </TableCell>
                         <TableCell sx={{ pl: 2 }}>
@@ -779,7 +797,7 @@ export default function UserSearch() {
                           </Typography>
                         </Box>
                         <Chip
-                          label={user.escorted ? 'Escorted' : 'Un-escorted'}
+                          label={user.escorted ? 'Escorted' : 'Unescorted'}
                           size="small"
                           sx={{
                             mt: 1,
@@ -898,19 +916,35 @@ export default function UserSearch() {
                 <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0, textAlign: 'center' }}>
                   {selectedUser?.name}
                 </Typography>
-                {/* Escorted/Un-escorted Chip directly below the visitor's name, centered and spaced */}
-                <Chip
-                  label={selectedUser?.escorted ? 'Escorted' : 'Un-escorted'}
-                  size="small"
+                {/* Escorted/Un-escorted Chip and 6-digit number stacked and centered */}
+                <Box
                   sx={{
-                    mt: 1,
-                    mb: 2,
-                    bgcolor: selectedUser?.escorted ? '#f8d7da' : '#d4edda',
-                    color: selectedUser?.escorted ? '#721c24' : '#155724',
                     display: 'flex',
-                    alignSelf: 'center',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    textAlign: 'center',
                   }}
-                />
+                >
+                  <Chip
+                    label={selectedUser?.escorted ? 'Escorted' : 'Unescorted'}
+                    size="small"
+                    sx={{
+                      mt: 1,
+                      mb: 0.2,
+                      bgcolor: selectedUser?.escorted ? '#f8d7da' : '#d4edda',
+                      color: selectedUser?.escorted ? '#721c24' : '#155724',
+                      display: 'flex',
+                      alignSelf: 'center',
+                    }}
+                  />
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ mt: 0.5 }}
+                  >
+                    123 456
+                  </Typography>
+                </Box>
                 <Tabs
                   orientation="vertical"
                   value={tabIndex}
