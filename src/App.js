@@ -1362,7 +1362,7 @@ export default function UserSearch() {
                       <Divider sx={{ my: 2 }} />
                       {/* Visitor (with avatar, clickable to Visitor Profile tab) */}
                       <Box
-                        sx={{ py: 1, display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                        sx={{ py: 1.5, display: 'flex', alignItems: 'center', cursor: 'pointer' }}
                         onClick={() => setTabIndex(1)}
                         component="div"
                         tabIndex={0}
@@ -1384,7 +1384,7 @@ export default function UserSearch() {
                       </Box>
                       {/* Host (with avatar, label, clickable to Host Profile tab) */}
                       <Box
-                        sx={{ py: 1, display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                        sx={{ py: 1.5, display: 'flex', alignItems: 'center', cursor: 'pointer' }}
                         onClick={() => setTabIndex(2)}
                         component="div"
                         tabIndex={0}
