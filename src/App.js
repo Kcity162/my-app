@@ -71,6 +71,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import MoreVert from '@mui/icons-material/MoreVert';
 import SecurityIcon from '@mui/icons-material/Security';
 import NoEncryptionIcon from '@mui/icons-material/NoEncryption';
+import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 
 // Country list for nationality selection with flags
 const countryList = [
@@ -351,6 +352,13 @@ export default function UserSearch() {
       phone: '555-123-4567',
       company: 'Host Company',
     };
+  }, [selectedUser]);
+
+  // Ensure Pass Information tab is default when modal opens
+  useEffect(() => {
+    if (selectedUser) {
+      setTabIndex(0);
+    }
   }, [selectedUser]);
 
   return (
@@ -923,7 +931,7 @@ export default function UserSearch() {
                 >
                   <Tab
                     label="Pass Information"
-                    icon={<SecurityIcon />}
+                    icon={<BadgeOutlinedIcon sx={{ fontSize: 24 }} />}
                     iconPosition="start"
                     sx={{
                       display: 'flex',
@@ -945,7 +953,7 @@ export default function UserSearch() {
                   />
                   <Tab
                     label="Visitor Profile"
-                    icon={<PersonIcon />}
+                    icon={<PersonIcon sx={{ fontSize: 24 }} />}
                     iconPosition="start"
                     sx={{
                       display: 'flex',
@@ -967,7 +975,7 @@ export default function UserSearch() {
                   />
                   <Tab
                     label="Host Profile"
-                    icon={<SupervisorAccountIcon />}
+                    icon={<SupervisorAccountIcon sx={{ fontSize: 24 }} />}
                     iconPosition="start"
                     sx={{
                       display: 'flex',
@@ -989,7 +997,7 @@ export default function UserSearch() {
                   />
                   <Tab
                     label="Security"
-                    icon={<NoEncryptionIcon />}
+                    icon={<SecurityIcon sx={{ fontSize: 24 }} />}
                     iconPosition="start"
                     sx={{
                       display: 'flex',
@@ -1011,7 +1019,7 @@ export default function UserSearch() {
                   />
                   <Tab
                     label="Vehicles"
-                    icon={<DirectionsCarIcon />}
+                    icon={<DirectionsCarIcon sx={{ fontSize: 24 }} />}
                     iconPosition="start"
                     sx={{
                       display: 'flex',
@@ -1033,7 +1041,7 @@ export default function UserSearch() {
                   />
                   <Tab
                     label="Notes"
-                    icon={<EditIcon />}
+                    icon={<EditIcon sx={{ fontSize: 24 }} />}
                     iconPosition="start"
                     sx={{
                       display: 'flex',
