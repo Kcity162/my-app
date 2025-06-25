@@ -912,11 +912,13 @@ export default function UserSearch() {
                     },
                   }}
                   TabIndicatorProps={{
-                    sx: { left: 0, width: 3, borderRadius: 2, bgcolor: 'primary.main' }
+                    sx: { left: -16, width: 3, borderRadius: 2, bgcolor: 'primary.main' }
                   }}
                 >
                   <Tab
                     label="Pass Information"
+                    icon={<SecurityIcon />}
+                    iconPosition="start"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -929,10 +931,13 @@ export default function UserSearch() {
                       backgroundColor: tabIndex === 0 ? 'primary.100' : 'inherit',
                       minHeight: 48,
                       textAlign: 'left',
+                      '&:hover': { backgroundColor: '#e0e0e0' },
                     }}
                   />
                   <Tab
                     label="Visitor Profile"
+                    icon={<PersonIcon />}
+                    iconPosition="start"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -945,10 +950,13 @@ export default function UserSearch() {
                       backgroundColor: tabIndex === 1 ? 'primary.100' : 'inherit',
                       minHeight: 48,
                       textAlign: 'left',
+                      '&:hover': { backgroundColor: '#e0e0e0' },
                     }}
                   />
                   <Tab
                     label="Host Profile"
+                    icon={<SupervisorAccountIcon />}
+                    iconPosition="start"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -961,10 +969,13 @@ export default function UserSearch() {
                       backgroundColor: tabIndex === 2 ? 'primary.100' : 'inherit',
                       minHeight: 48,
                       textAlign: 'left',
+                      '&:hover': { backgroundColor: '#e0e0e0' },
                     }}
                   />
                   <Tab
                     label="Security"
+                    icon={<NoEncryptionIcon />}
+                    iconPosition="start"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -977,10 +988,13 @@ export default function UserSearch() {
                       backgroundColor: tabIndex === 3 ? 'primary.100' : 'inherit',
                       minHeight: 48,
                       textAlign: 'left',
+                      '&:hover': { backgroundColor: '#e0e0e0' },
                     }}
                   />
                   <Tab
                     label="Vehicles"
+                    icon={<DirectionsCarIcon />}
+                    iconPosition="start"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -993,10 +1007,13 @@ export default function UserSearch() {
                       backgroundColor: tabIndex === 4 ? 'primary.100' : 'inherit',
                       minHeight: 48,
                       textAlign: 'left',
+                      '&:hover': { backgroundColor: '#e0e0e0' },
                     }}
                   />
                   <Tab
                     label="Notes"
+                    icon={<EditIcon />}
+                    iconPosition="start"
                     sx={{
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
@@ -1009,6 +1026,7 @@ export default function UserSearch() {
                       backgroundColor: tabIndex === 5 ? 'primary.100' : 'inherit',
                       minHeight: 48,
                       textAlign: 'left',
+                      '&:hover': { backgroundColor: '#e0e0e0' },
                     }}
                   />
                 </Tabs>
