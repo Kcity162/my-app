@@ -920,6 +920,9 @@ export default function UserSearch() {
                     icon={<SecurityIcon />}
                     iconPosition="start"
                     sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
                       textTransform: 'none',
@@ -939,6 +942,9 @@ export default function UserSearch() {
                     icon={<PersonIcon />}
                     iconPosition="start"
                     sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
                       textTransform: 'none',
@@ -958,6 +964,9 @@ export default function UserSearch() {
                     icon={<SupervisorAccountIcon />}
                     iconPosition="start"
                     sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
                       textTransform: 'none',
@@ -977,6 +986,9 @@ export default function UserSearch() {
                     icon={<NoEncryptionIcon />}
                     iconPosition="start"
                     sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
                       textTransform: 'none',
@@ -996,6 +1008,9 @@ export default function UserSearch() {
                     icon={<DirectionsCarIcon />}
                     iconPosition="start"
                     sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
                       textTransform: 'none',
@@ -1015,6 +1030,9 @@ export default function UserSearch() {
                     icon={<EditIcon />}
                     iconPosition="start"
                     sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
                       alignItems: 'flex-start',
                       justifyContent: 'flex-start',
                       textTransform: 'none',
