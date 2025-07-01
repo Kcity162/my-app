@@ -605,7 +605,7 @@ export default function UserSearch() {
               <MenuItem onClick={() => handleFilterChange('past')}>Past</MenuItem>
             </Menu>
           </Box>
-          {/* Toggle buttons with tooltips for view mode shortcuts */}
+          {/*  Toggle buttons with tooltips for view mode shortcuts */}
           <ToggleButtonGroup
             value={viewMode}
             exclusive
